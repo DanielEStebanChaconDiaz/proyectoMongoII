@@ -57,6 +57,24 @@ export class Movies {
             console.error('Error fetching movie descriptions:', err);
         }
     }
+    async agregarPelicula(user, pws, titulo, descripcion, precio) {
+        await this.connect(user, pws);
+        try {
+            const nuevaPelicula = {
+                title: titulo,
+                description: descripcion,
+                price: precio
+            };
+    
+            const result = await this.db.collection('movies').insertOne(nuevaPelicula);
+            return result;
+        } catch (err) {
+            console.error('Error al agregar la película:', err);
+            throw err;
+        } finally {
+            await this.closeConnection();
+        }
+    }
 
     async closeConnection() {
         if (this.connection) {

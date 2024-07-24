@@ -1,82 +1,218 @@
 import readlineSync from 'readline-sync';
-import Connection from '../db/connect/connect.js';
-import { Collection } from 'mongodb';
-import { Users } from './model/users.js';
 import { Movies } from './model/movies.js';
+import { Users } from './model/users.js';
 
 export class Login {
+    constructor() {
+        this.movies = new Movies();
+        this.users = new Users();
+    }
+
     async login() {
         console.log("Bienvenido a la Base de Datos MongoDB");
-        console.log("1. Conectar como administrador");
-        console.log('2. Conectar como Usuario');
-        console.log('3. Conectar como Vip');
-
-        const opcion = readlineSync.questionInt("Selecciona una opción: ");
-
-        switch (opcion) {
-            case 1:
-                await conectarConMongoDB();
+        const opciones = ['Administrador', 'Usuario Regular', 'Usuario VIP'];
+        const index = readlineSync.keyInSelect(opciones, '¿Cómo deseas conectarte?', {cancel: 'Salir'});
+        
+        switch(index) {
+            case 0:
+                await this.conectarComoAdministrador();
                 break;
-            // Agrega más casos aquí si es necesario
+            case 1:
+                await this.conectarComoUsuario();
+                break;
+            case 2:
+                await this.conectarComoVip();
+                break;
+            default:
+                console.log("Saliendo del sistema...");
         }
     }
-}
 
-export async function conectarConMongoDB() {
-    const user = readlineSync.question('Por favor, ingresa tu nombre de usuario: ');
-    const pws = readlineSync.question('Por favor, ingresa tu contraseña: ', { hideEchoBack: true });
-    console.clear();
-    if (user === 'adminCineCampus' && pws === '1234') {
-        if (!user || !pws) {
-            console.error("El nombre de usuario y la contraseña son obligatorios.");
-            return;
+    async conectarComoAdministrador() {
+        const user = readlineSync.question('Por favor, ingresa tu nombre de usuario: ');
+        const pws = readlineSync.question('Por favor, ingresa tu contraseña: ', { hideEchoBack: true });
+        console.clear();
+
+        if (user === 'adminCineCampus' && pws === '1234') {
+            try {
+                console.log("Conectando a MongoDB...");
+                const resultPeliculas = await this.movies.getMovies(user, pws);
+                const resultDescription = await this.movies.getMoviesDescription(user, pws);
+                const agregarPelicula = await this.movies.agregarPelicula(user,pws);
+                const resultUsers = await this.users.getUsers(user, pws);
+                console.log("Conexión a MongoDB establecida correctamente.");
+                await this.mostrarMenuAdministrador(resultPeliculas, resultUsers, resultDescription, agregarPelicula);
+            } catch (error) {
+                console.error("Error al conectar a MongoDB:", error);
+            }
+        } else {
+            console.log("Nombre de usuario o contraseña incorrectos.");
         }
+    }
 
+    async mostrarMenuAdministrador(resultPeliculas, resultUsers, resultDescription,agregarPelicula) {
+        let continuar = true;
+
+        while (continuar) {
+            const opciones = [
+                'Listar Películas',
+                'Listar Descripción de películas',
+                'Listar Usuarios',
+                'Agregar Película',
+                'Editar Película',
+                'Eliminar Película'
+            ];
+
+            const index = readlineSync.keyInSelect(opciones, '¿Qué acción deseas realizar?', {cancel: 'Salir'});
+
+            switch (index) {
+                case 0:
+                    console.log("Listando películas:");
+                    console.log(resultPeliculas);
+                    break;
+                case 1:
+                    console.log("Descripción de películas:");
+                    console.log(resultDescription);
+                    break;
+                case 2:
+                    console.log("Listando Usuarios:");
+                    console.log(resultUsers);
+                    break;
+                case 3:
+                    console.log("Agregar pelicula:");
+                    console.log(agregarPelicula);
+                    break;
+                case 4:
+                case 5:
+                    await this.eliminarPelicula();
+                    break;
+                default:
+                    continuar = false;
+                    console.log("Saliendo del menú de administrador...");
+            }
+
+            if (continuar) {
+                readlineSync.question('Presiona Enter para continuar...');
+            }
+        }
+    }
+
+    async conectarComoUsuario() {
+        const user = readlineSync.question('Por favor, ingresa tu nombre de usuario: ');
+        const pws = readlineSync.question('Por favor, ingresa tu contraseña: ', { hideEchoBack: true });
         console.clear();
 
         try {
-            console.log("Intentando conectar a MongoDB...");
-            const movies = new Movies();
-            const resultPelicuals = await movies.getMovies(user, pws);
-            const resultDescription = await movies.getMoviesDescription(user, pws);
-            const users = new Users();
-            const resultUsers = await users.getUsers(user, pws);
-            console.log("Conexión a MongoDB establecida correctamente.");
-            mostrarMenuCRUD(resultPelicuals, resultUsers, resultDescription);
+            // Aquí deberías verificar las credenciales del usuario en tu base de datos
+            console.log("Conectando como usuario regular...");
+            const resultPeliculas = await this.movies.getMovies(user, pws);
+            console.log("Conexión establecida correctamente.");
+            await this.mostrarMenuUsuario(resultPeliculas);
         } catch (error) {
-            console.error("Error al conectar a MongoDB:", error);
+            console.error("Error al conectar:", error);
         }
-    } else {
-        console.log("Nombre de usuario y contraseña incorrectos.");
     }
-}
 
-async function mostrarMenuCRUD(resultPelicuals, resultUsers,resultDescription) {
-    let salir = false;
+    async conectarComoVip() {
+        const user = readlineSync.question('Por favor, ingresa tu nombre de usuario VIP: ');
+        const pws = readlineSync.question('Por favor, ingresa tu contraseña: ', { hideEchoBack: true });
+        console.clear();
 
-    while (!salir) {
-        console.log("\nMenú CRUD:");
-        console.log("1. Listar Peliculas");
-        console.log("2. Lstar Descripcion de peliculas");
-        console.log("3. Listar Users");
-
-        const opcion = readlineSync.questionInt("Selecciona una opción: ");
-
-        switch (opcion) {
-            case 1:
-                console.log("Listando colecciones:");
-                console.log(resultPelicuals);
-                break;
-            case 2:
-                console.log("Descripcion de peliculas:");
-                console.log(resultDescription);
-                break;
-            case 3:
-                console.log("Listando Usuarios:");
-                console.log(resultUsers);
-                break;
-            default:
-                console.log("Opción no válida. Intenta de nuevo.");
+        try {
+            // Aquí deberías verificar las credenciales del usuario VIP en tu base de datos
+            console.log("Conectando como usuario VIP...");
+            const resultPeliculas = await this.movies.getMovies(user, pws);
+            console.log("Conexión establecida correctamente.");
+            await this.mostrarMenuVip(resultPeliculas);
+        } catch (error) {
+            console.error("Error al conectar:", error);
         }
+    }
+
+    async mostrarMenuUsuario(resultPeliculas) {
+        let continuar = true;
+
+        while (continuar) {
+            const opciones = [
+                'Ver Películas Disponibles',
+                'Comprar Boleto',
+                'Reservar Boleto',
+                'Cancelar Reservación'
+            ];
+
+            const index = readlineSync.keyInSelect(opciones, '¿Qué acción deseas realizar?', {cancel: 'Salir'});
+
+            switch (index) {
+                case 0:
+                    console.log("Películas Disponibles:");
+                    console.log(resultPeliculas);
+                    break;
+                case 1:
+                    await this.comprarBoleto();
+                    break;
+                case 2:
+                    await this.reservarBoleto();
+                    break;
+                case 3:
+                    await this.cancelarReservacion();
+                    break;
+                default:
+                    continuar = false;
+                    console.log("Cerrando sesión...");
+            }
+
+            if (continuar) {
+                readlineSync.question('Presiona Enter para continuar...');
+            }
+        }
+    }
+
+    async mostrarMenuVip(resultPeliculas) {
+        let continuar = true;
+
+        while (continuar) {
+            const opciones = [
+                'Ver Películas Disponibles',
+                'Comprar Boleto con Descuento VIP',
+                'Reservar Boleto',
+                'Cancelar Reservación',
+                'Ver Beneficios VIP'
+            ];
+
+            const index = readlineSync.keyInSelect(opciones, '¿Qué acción deseas realizar?', {cancel: 'Salir'});
+
+            switch (index) {
+                case 0:
+                    console.log("Películas Disponibles:");
+                    console.log(resultPeliculas);
+                    break;
+                case 1:
+                    await this.comprarBoletoVIP();
+                    break;
+                case 2:
+                    await this.reservarBoleto();
+                    break;
+                case 3:
+                    await this.cancelarReservacion();
+                    break;
+                case 4:
+                    this.verBeneficiosVIP();
+                    break;
+                default:
+                    continuar = false;
+                    console.log("Cerrando sesión...");
+            }
+
+            if (continuar) {
+                readlineSync.question('Presiona Enter para continuar...');
+            }
+        }
+    }
+
+    verBeneficiosVIP() {
+        console.log("Beneficios VIP:");
+        console.log("1. Descuento del 15% en todas las compras de boletos");
+        console.log("2. Acceso anticipado a estrenos");
+        console.log("3. Snacks gratis en cada visita");
     }
 }
