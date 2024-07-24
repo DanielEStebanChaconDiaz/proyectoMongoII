@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "CineCampus es una empresa de entretenimiento que se especializa en ofrecer una experiencia de cine completa y personalizada. La empresa desea desarrollar una aplicación web que permita a los usuarios seleccionar películas, comprar boletos y asignar asientos de manera eficiente y cómoda. La aplicación también ofrecerá opciones de descuento para usuarios con tarjeta VIP y permitirá realizar compras en línea.",
   "main": "main.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,6 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.4.5",
-    "mongodb": "^6.8.0"
+    "mongodb": "^6.8.0",
+    "readline": "^1.3.0",
+    "readline-sync": "^1.4.10"
   }
 }
