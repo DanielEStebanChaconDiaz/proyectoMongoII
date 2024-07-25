@@ -32,16 +32,15 @@ export class Login {
         const user = readlineSync.question('Por favor, ingresa tu nombre de usuario: ');
         const pws = readlineSync.question('Por favor, ingresa tu contraseña: ', { hideEchoBack: true });
         console.clear();
-
+    
         if (user === 'adminCineCampus' && pws === '1234') {
             try {
                 console.log("Conectando a MongoDB...");
                 const resultPeliculas = await this.movies.getMovies(user, pws);
                 const resultDescription = await this.movies.getMoviesDescription(user, pws);
-                const agregarPelicula = await this.movies.agregarPelicula(user,pws);
                 const resultUsers = await this.users.getUsers(user, pws);
                 console.log("Conexión a MongoDB establecida correctamente.");
-                await this.mostrarMenuAdministrador(resultPeliculas, resultUsers, resultDescription, agregarPelicula);
+                await this.mostrarMenuAdministrador(user, pws, resultPeliculas, resultUsers, resultDescription);
             } catch (error) {
                 console.error("Error al conectar a MongoDB:", error);
             }
@@ -50,7 +49,7 @@ export class Login {
         }
     }
 
-    async mostrarMenuAdministrador(resultPeliculas, resultUsers, resultDescription,agregarPelicula) {
+    async mostrarMenuAdministrador(user, pws, resultPeliculas, resultUsers, resultDescription) {
         let continuar = true;
 
         while (continuar) {
@@ -79,10 +78,12 @@ export class Login {
                     console.log(resultUsers);
                     break;
                 case 3:
-                    console.log("Agregar pelicula:");
-                    console.log(agregarPelicula);
+                    console.log("Agregar película:");
+                    await this.movies.agregarPelicula(user, pws);
                     break;
                 case 4:
+                    // Implementar edición de película
+                    break;
                 case 5:
                     await this.eliminarPelicula();
                     break;
@@ -96,6 +97,8 @@ export class Login {
             }
         }
     }
+
+    // ... (resto de los métodos sin cambios)
 
     async conectarComoUsuario() {
         const user = readlineSync.question('Por favor, ingresa tu nombre de usuario: ');

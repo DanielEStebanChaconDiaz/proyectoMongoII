@@ -1,5 +1,6 @@
 // models/movies.js
 import Connection from '../../db/connect/connect.js';
+import readlineSync from 'readline-sync';
 
 export class Movies {
     constructor() {
@@ -57,25 +58,63 @@ export class Movies {
             console.error('Error fetching movie descriptions:', err);
         }
     }
-    async agregarPelicula(user, pws, titulo, descripcion, precio) {
+    async agregarPelicula(user, pws) {
         await this.connect(user, pws);
         try {
-            const nuevaPelicula = {
-                title: titulo,
-                description: descripcion,
-                price: precio
+            let movieId;
+            let existingMovie;
+            let title;
+            let existingMovieName;
+    
+            do {
+                movieId = parseInt(readlineSync.question('Ingrese el ID de la película: '));
+                existingMovie = await this.db.collection('movies').findOne({ movieId: movieId });
+                if (existingMovie) {
+                    console.log('Error: Ya existe una película con este ID. Inténtelo de nuevo.');
+                    continue;
+                }
+    
+                title = readlineSync.question('Ingrese el título de la película: ');
+                existingMovieName = await this.db.collection('movies').findOne({ title: title });
+                if (existingMovieName) {
+                    console.log('Error: Ya existe una película con este título. Inténtelo de nuevo.');
+                }
+            } while (existingMovie || existingMovieName);
+    
+            const rating = parseFloat(readlineSync.question('Ingrese el rating de la película (0-10): '));
+            const genre = readlineSync.question('Ingrese el género de la película: ');
+            const duration = parseInt(readlineSync.question('Ingrese la duración de la película (en minutos): '));
+            const description = readlineSync.question('Ingrese la descripción de la película: ');
+    
+            // Obtener la fecha y hora actual
+            const creationDate = new Date();
+    
+            const movieDocument = {
+                movieId: movieId,
+                title: title,
+                creationDate: creationDate, // Fecha y hora de creación del registro
+                rating: rating,
             };
     
-            const result = await this.db.collection('movies').insertOne(nuevaPelicula);
-            return result;
+            const descriptionDocument = {
+                movieId: movieId,
+                description: description,
+                genre: genre,
+                duration: duration
+            };
+    
+            await this.db.collection('movies').insertOne(movieDocument);
+            await this.db.collection('movie-description').insertOne(descriptionDocument);
+    
+            console.log('Película agregada exitosamente.');
+            return `Película agregada: ${title} (Creada el ${creationDate.toLocaleString()})`;
         } catch (err) {
             console.error('Error al agregar la película:', err);
-            throw err;
-        } finally {
-            await this.closeConnection();
+            return 'Error al agregar la película: ' + err.message;
         }
     }
-
+    
+    
     async closeConnection() {
         if (this.connection) {
             await this.connection.close();
