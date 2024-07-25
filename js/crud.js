@@ -1,11 +1,14 @@
 import readlineSync from 'readline-sync';
 import { Movies } from './model/movies.js';
 import { Users } from './model/users.js';
+import Connection from '../db/connect/connect.js';
 
 export class Login {
     constructor() {
         this.movies = new Movies();
         this.users = new Users();
+        this.connection = new Connection();
+        this.db = null;
     }
 
     async login() {
@@ -108,9 +111,10 @@ export class Login {
         try {
             // Aquí deberías verificar las credenciales del usuario en tu base de datos
             console.log("Conectando como usuario regular...");
-            const resultPeliculas = await this.movies.getMovies(user, pws);
+            const resultFunctions = await this.users.getMoviesFunction(user, pws);
+            const resultSeats = await this.users.getSeats(user, pws);
             console.log("Conexión establecida correctamente.");
-            await this.mostrarMenuUsuario(resultPeliculas);
+            await this.mostrarMenuUsuario(resultFunctions, resultSeats);
         } catch (error) {
             console.error("Error al conectar:", error);
         }
@@ -132,7 +136,7 @@ export class Login {
         }
     }
 
-    async mostrarMenuUsuario(resultPeliculas) {
+    async mostrarMenuUsuario(resultFunctions, resultSeats) {
         let continuar = true;
 
         while (continuar) {
@@ -148,10 +152,11 @@ export class Login {
             switch (index) {
                 case 0:
                     console.log("Películas Disponibles:");
-                    console.log(resultPeliculas);
+                    console.log(resultFunctions);
                     break;
                 case 1:
-                    await this.comprarBoleto();
+                    console.log("Asientos Disponibles:");
+                    await this.users.comprarBoleto(resultSeats)
                     break;
                 case 2:
                     await this.reservarBoleto();
@@ -169,6 +174,9 @@ export class Login {
             }
         }
     }
+
+    
+    
 
     async mostrarMenuVip(resultPeliculas) {
         let continuar = true;
