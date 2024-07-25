@@ -85,7 +85,7 @@ export class Login {
                     // Implementar edición de película
                     break;
                 case 5:
-                    await this.eliminarPelicula();
+                    await this.movies.dropMovie(user, pws);
                     break;
                 default:
                     continuar = false;

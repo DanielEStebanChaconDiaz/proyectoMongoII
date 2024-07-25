@@ -113,6 +113,26 @@ export class Movies {
             return 'Error al agregar la película: ' + err.message;
         }
     }
+    async dropMovie(user, pws) {
+        await this.connect(user, pws);
+        try {
+            const movieId = parseInt(readlineSync.question('Ingrese el ID de la película que desea eliminar: '));
+            const existingMovie = await this.db.collection('movies').findOne({ movieId: movieId });
+    
+            if (existingMovie) {
+                await this.db.collection('movies').deleteOne({ movieId: movieId });
+                await this.db.collection('movie-description').deleteOne({ movieId: movieId });
+                console.log('Película eliminada con éxito.');
+                return `Película con ID ${movieId} eliminada con éxito.`;
+            } else {
+                console.log('No se encontró la película con el ID ingresado.');
+                return `No se encontró la película con ID ${movieId}.`;
+            }
+        } catch (err) {
+            console.error('Error al eliminar la película:', err);
+            return 'Error al eliminar la película: ' + err.message;
+        }
+    }
     
     
     async closeConnection() {
