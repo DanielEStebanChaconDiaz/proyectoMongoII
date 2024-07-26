@@ -24,7 +24,6 @@ export default class Connection {
             try {
                 await this.client.connect();
                 this.db = this.client.db(DB_NAME);
-                console.log(`Connected to database: ${DB_NAME}`);
             } catch (error) {
                 console.error("Error connecting to MongoDB:", error);
                 throw error;
@@ -45,5 +44,6 @@ export default class Connection {
             await this.client.close();
             console.log("MongoDB connection closed");
         }
+        return "";
     }
 }

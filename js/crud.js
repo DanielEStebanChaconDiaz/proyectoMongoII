@@ -91,7 +91,7 @@ export class Login {
                 const resultDescription = await this.movies.getMoviesDescription(user, pws);
                 const resultUsers = await this.users.getUsers(user, pws);
                 console.log("Conexión a MongoDB establecida correctamente.");
-                await this.mostrarMenuAdministrador(user, pws, resultPeliculas, resultUsers, resultDescription);
+                await this.mostrarMenuAdministrador(user, pws, resultPeliculas, resultUsers, resultDescription, close);
             } catch (error) {
                 console.error("Error al conectar a MongoDB:", error);
             }
@@ -135,7 +135,7 @@ export class Login {
                     await this.movies.dropMovie(user, pws);
                     break;
                 default:
-                    continuar = false;
+                    continuar =false
                     console.log("Saliendo del menú de administrador...");
             }
 
