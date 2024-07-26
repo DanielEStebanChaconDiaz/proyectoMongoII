@@ -26,14 +26,14 @@ export class Users {
             let users
 
             const result = await this.db.command({ usersInfo: 1 });
-            
-            const cineCampusUsers = result.users.filter(user => 
+
+            const cineCampusUsers = result.users.filter(user =>
                 user.roles.some(role => role.db === 'cineCampus')
             );
             cineCampusUsers.forEach(usr => {
-               users += (`- nombre: ${usr.user}\n`);
+                users += (`- nombre: ${usr.user}\n`);
             });
-            
+
             return users;
         } catch (err) {
             console.error('Error fetching users:', err);
@@ -44,8 +44,8 @@ export class Users {
             }
         }
     }
-    
-    async getSeats(user, pws){
+
+    async getSeats(user, pws) {
         await this.connect(user, pws);
         try {
             const collections = await this.db.collection('seats').find().toArray();
@@ -54,8 +54,16 @@ export class Users {
             console.error('Error fetching movies:', err);
         }
     }
-
-    async comprarBoleto(resultSeats) {
+    async verificarTarjetaVIP(numeroTarjeta) {
+        try {
+            const tarjeta = await this.db.collection('vip-cards').findOne({ cardNumber: numeroTarjeta });
+            return tarjeta !== null;
+        } catch (error) {
+            console.error("Error al verificar la tarjeta VIP:", error);
+            return false;
+        }
+    }
+    async comprarBoleto(resultSeats, descuento) {
         // Mostrar asientos disponibles
         console.log("Asientos Disponibles:");
         console.log(resultSeats);
@@ -67,10 +75,18 @@ export class Users {
         const asiento = resultSeats.find(seat => seat.seatId === parseInt(seatId));
     
         if (asiento) {
+            // Cuando se va a realizar el pago:
+            const precioOriginal = asiento.precio; // Asume que este es el precio base del boleto
+            const precioFinal = precioOriginal * (1 - descuento);
+    
+            console.log(`Precio original del boleto: $${precioOriginal}`);
+            if (descuento > 0) {
+                console.log(`Descuento aplicado: ${descuento * 100}%`);
+                console.log(`Precio final del boleto: $${precioFinal}`);
+            }
             if (asiento.estado === 'disponible') {
                 // Actualizar el estado del asiento a 'ocupado'
                 try {
-                    
                     const result = await this.db.collection('seats').updateOne(
                         { seatId: parseInt(seatId) }, // Filtro para encontrar el asiento
                         { $set: { estado: 'ocupado' } } // Actualización del estado
@@ -91,6 +107,7 @@ export class Users {
             console.log('ID de asiento no válido.');
         }
     }
+    
     async closeConnection() {
         if (this.connection) {
             await this.connection.close();

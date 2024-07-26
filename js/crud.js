@@ -18,7 +18,7 @@ export class Login {
 
     async login() {
         console.log("Bienvenido a la Base de Datos MongoDB");
-        const opciones = ['Administrador', 'Usuario Regular', 'Usuario VIP', 'Registrar Nuevo Usuario'];
+        const opciones = ['Administrador', 'Usuario', 'Registrarme'];
         const index = readlineSync.keyInSelect(opciones, '¿Cómo deseas conectarte?', { cancel: 'Salir' });
 
         switch (index) {
@@ -109,7 +109,6 @@ export class Login {
                 'Listar Descripción de películas',
                 'Listar Usuarios',
                 'Agregar Película',
-                'Editar Película',
                 'Eliminar Película'
             ];
 
@@ -133,9 +132,6 @@ export class Login {
                     await this.movies.agregarPelicula(user, pws);
                     break;
                 case 4:
-                    // Implementar edición de película
-                    break;
-                case 5:
                     await this.movies.dropMovie(user, pws);
                     break;
                 default:
@@ -158,7 +154,7 @@ export class Login {
 
         try {
             // Aquí deberías verificar las credenciales del usuario en tu base de datos
-            console.log("Conectando como usuario regular...");
+            console.log("Conectando como usuario...");
             const resultFunctions = await this.movies.getMoviesFunction(user, pws);
             const resultSeats = await this.users.getSeats(user, pws);
             console.log("Conexión establecida correctamente.");
@@ -168,7 +164,7 @@ export class Login {
         }
     }
 
-
+    
     async mostrarMenuUsuario(resultFunctions, resultSeats) {
         let continuar = true;
 
@@ -176,7 +172,6 @@ export class Login {
             const opciones = [
                 'Ver Películas Disponibles',
                 'Comprar Boleto',
-                'Reservar Boleto',
                 'Cancelar Reservación'
             ];
 
@@ -188,13 +183,10 @@ export class Login {
                     console.log(resultFunctions);
                     break;
                 case 1:
-                    console.log("Asientos Disponibles:");
-                    await this.users.comprarBoleto(resultSeats)
+                    console.log("Peliculas Disponibles:");
+                    await this.procesarCompraOReserva(resultFunctions, resultSeats);
                     break;
                 case 2:
-                    await this.reservarBoleto();
-                    break;
-                case 3:
                     await this.cancelarReservacion();
                     break;
                 default:
@@ -208,10 +200,54 @@ export class Login {
         }
     }
 
-    verBeneficiosVIP() {
-        console.log("Beneficios VIP:");
-        console.log("1. Descuento del 15% en todas las compras de boletos");
-        console.log("2. Acceso anticipado a estrenos");
-        console.log("3. Snacks gratis en cada visita");
+    async procesarCompraOReserva(resultFunctions, resultSeats) {
+        // Mostrar películas disponibles
+        console.log("Películas Disponibles:");
+        resultFunctions.forEach((pelicula, index) => {
+            console.log(`${index + 1}. ${pelicula.title}`);
+        });
+    
+        // Seleccionar película
+        const peliculaIndex = readlineSync.questionInt('Selecciona el número de la película a la que quieres asistir: ') - 1;
+        if (peliculaIndex < 0 || peliculaIndex >= resultFunctions.length) {
+            console.log("Selección inválida.");
+            return;
+        }
+    
+        const peliculaSeleccionada = resultFunctions[peliculaIndex];
+    
+        // Verificar si el usuario tiene tarjeta VIP
+        const tieneVIP = readlineSync.keyInYNStrict('¿Posees una tarjeta VIP?');
+        let descuento = 0;
+    
+        if (tieneVIP) {
+            const numeroTarjeta = readlineSync.question('Por favor, ingresa el número de tu tarjeta VIP: ');
+            const esVIPValido = await this.users.verificarTarjetaVIP(numeroTarjeta);
+            if (esVIPValido) {
+                descuento = 0.15; // 15% de descuento
+                console.log("¡Tarjeta VIP verificada! Se aplicará un 15% de descuento.");
+            } else {
+                console.log("Lo siento, no se pudo verificar la tarjeta VIP. No se aplicará descuento.");
+            }
+        }
+    
+        // Mostrar asientos disponibles
+        console.log("Asientos Disponibles:");
+        console.log(resultSeats);
+    
+        // Preguntar si quiere comprar o reservar
+        const opcion = readlineSync.keyInSelect(['Comprar', 'Reservar'], '¿Deseas comprar o reservar el boleto?', { cancel: 'Cancelar' });
+    
+        switch (opcion) {
+            case 0:
+                await this.users.comprarBoleto(resultSeats, descuento);
+                break;
+            case 1:
+                await this.reservarBoleto(resultSeats);
+                break;
+            default:
+                console.log("Operación cancelada.");
+        }
     }
+    
 }
