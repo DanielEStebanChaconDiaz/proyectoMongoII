@@ -22,51 +22,29 @@ export class Users {
     async getUsers(user, pws) {
         await this.connect(user, pws);
         try {
-            const collections = await this.db.collection('users').find().toArray();
-            return collections;
+            await this.connect();
+            let users
+
+            const result = await this.db.command({ usersInfo: 1 });
+            
+            const cineCampusUsers = result.users.filter(user => 
+                user.roles.some(role => role.db === 'cineCampus')
+            );
+            cineCampusUsers.forEach(usr => {
+               users += (`- nombre: ${usr.user}\n`);
+            });
+            
+            return users;
         } catch (err) {
             console.error('Error fetching users:', err);
+            throw err;
+        } finally {
+            if (this.client) {
+                await this.client.close();
+            }
         }
     }
-    async getMoviesFunction(user, pws) {
-        await this.connect(user, pws);
-        try {
-            const collections = await this.db.collection('movies').aggregate([
-                {
-                  $lookup: {
-                    from: 'cinemas',
-                    localField: 'movieId',
-                    foreignField: 'functions.movieId',
-                    as: 'Programacion'
-                  }
-                },
-                {
-                  $unwind: '$Programacion'
-                },
-                {
-                  $unwind: '$Programacion.functions'
-                },
-                {
-                  $match: {
-                    'Programacion.functions.movieId':  1
-                  }
-                },
-                {
-                  $project: {
-                    title: 1,
-                    'Programacion.name': 1,
-                    'Programacion.location': 1,
-                    'Programacion.functions.startTime': 1,
-                    'Programacion.functions.endTime': 1,
-                    'Programacion.functions.room': 1
-                  }
-                }
-              ]).toArray();
-            return collections;
-        } catch (err) {
-            console.error('Error fetching movie descriptions:', err);
-        }
-    }
+    
     async getSeats(user, pws){
         await this.connect(user, pws);
         try {
@@ -76,6 +54,7 @@ export class Users {
             console.error('Error fetching movies:', err);
         }
     }
+
     async comprarBoleto(resultSeats) {
         // Mostrar asientos disponibles
         console.log("Asientos Disponibles:");

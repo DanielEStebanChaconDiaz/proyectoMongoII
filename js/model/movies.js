@@ -133,6 +133,46 @@ export class Movies {
             return 'Error al eliminar la película: ' + err.message;
         }
     }
+
+    async getMoviesFunction(user, pws) {
+        await this.connect(user, pws);
+        try {
+            const collections = await this.db.collection('movies').aggregate([
+                {
+                  $lookup: {
+                    from: 'cinemas',
+                    localField: 'movieId',
+                    foreignField: 'functions.movieId',
+                    as: 'Programacion'
+                  }
+                },
+                {
+                  $unwind: '$Programacion'
+                },
+                {
+                  $unwind: '$Programacion.functions'
+                },
+                {
+                  $match: {
+                    'Programacion.functions.movieId':  1
+                  }
+                },
+                {
+                  $project: {
+                    title: 1,
+                    'Programacion.name': 1,
+                    'Programacion.location': 1,
+                    'Programacion.functions.startTime': 1,
+                    'Programacion.functions.endTime': 1,
+                    'Programacion.functions.room': 1
+                  }
+                }
+              ]).toArray();
+            return collections;
+        } catch (err) {
+            console.error('Error fetching movie descriptions:', err);
+        }
+    }
     
     
     async closeConnection() {

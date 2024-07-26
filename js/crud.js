@@ -29,13 +29,10 @@ export class Login {
                 await this.conectarComoUsuario();
                 break;
             case 2:
-                await this.conectarComoVip();
-                break;
-            case 3:
                 await this.registrarNuevoUsuario();
                 break;
             default:
-                console.log("Saliendo del sistema...");
+            console.log("Saliendo del sistema...");
         }
     }
 
@@ -162,7 +159,7 @@ export class Login {
         try {
             // Aquí deberías verificar las credenciales del usuario en tu base de datos
             console.log("Conectando como usuario regular...");
-            const resultFunctions = await this.users.getMoviesFunction(user, pws);
+            const resultFunctions = await this.movies.getMoviesFunction(user, pws);
             const resultSeats = await this.users.getSeats(user, pws);
             console.log("Conexión establecida correctamente.");
             await this.mostrarMenuUsuario(resultFunctions, resultSeats);
@@ -171,21 +168,6 @@ export class Login {
         }
     }
 
-    async conectarComoVip() {
-        const user = readlineSync.question('Por favor, ingresa tu nombre de usuario VIP: ');
-        const pws = readlineSync.question('Por favor, ingresa tu contraseña: ', { hideEchoBack: true });
-        console.clear();
-
-        try {
-            // Aquí deberías verificar las credenciales del usuario VIP en tu base de datos
-            console.log("Conectando como usuario VIP...");
-            const resultPeliculas = await this.movies.getMovies(user, pws);
-            console.log("Conexión establecida correctamente.");
-            await this.mostrarMenuVip(resultPeliculas);
-        } catch (error) {
-            console.error("Error al conectar:", error);
-        }
-    }
 
     async mostrarMenuUsuario(resultFunctions, resultSeats) {
         let continuar = true;
@@ -214,51 +196,6 @@ export class Login {
                     break;
                 case 3:
                     await this.cancelarReservacion();
-                    break;
-                default:
-                    continuar = false;
-                    console.log("Cerrando sesión...");
-            }
-
-            if (continuar) {
-                readlineSync.question('Presiona Enter para continuar...');
-            }
-        }
-    }
-
-
-
-
-    async mostrarMenuVip(resultPeliculas) {
-        let continuar = true;
-
-        while (continuar) {
-            const opciones = [
-                'Ver Películas Disponibles',
-                'Comprar Boleto con Descuento VIP',
-                'Reservar Boleto',
-                'Cancelar Reservación',
-                'Ver Beneficios VIP'
-            ];
-
-            const index = readlineSync.keyInSelect(opciones, '¿Qué acción deseas realizar?', { cancel: 'Salir' });
-
-            switch (index) {
-                case 0:
-                    console.log("Películas Disponibles:");
-                    console.log(resultPeliculas);
-                    break;
-                case 1:
-                    await this.comprarBoletoVIP();
-                    break;
-                case 2:
-                    await this.reservarBoleto();
-                    break;
-                case 3:
-                    await this.cancelarReservacion();
-                    break;
-                case 4:
-                    this.verBeneficiosVIP();
                     break;
                 default:
                     continuar = false;
