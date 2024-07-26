@@ -2,6 +2,7 @@ import readlineSync from 'readline-sync';
 import { Movies } from './model/movies.js';
 import { Users } from './model/users.js';
 import Connection from '../db/connect/connect.js';
+import { MongoClient } from 'mongodb';
 
 export class Login {
     constructor() {
@@ -9,14 +10,18 @@ export class Login {
         this.users = new Users();
         this.connection = new Connection();
         this.db = null;
+        this.adminUri = 'mongodb://mongo:QzTrGVnGyYjBHnmnBVuVcOtJNGxHvEAL@roundhouse.proxy.rlwy.net:17787/'; // URI del admin
+        this.dbName = 'cineCampus';
+        this.client = null;
+
     }
 
     async login() {
         console.log("Bienvenido a la Base de Datos MongoDB");
-        const opciones = ['Administrador', 'Usuario Regular', 'Usuario VIP'];
-        const index = readlineSync.keyInSelect(opciones, '¿Cómo deseas conectarte?', {cancel: 'Salir'});
-        
-        switch(index) {
+        const opciones = ['Administrador', 'Usuario Regular', 'Usuario VIP', 'Registrar Nuevo Usuario'];
+        const index = readlineSync.keyInSelect(opciones, '¿Cómo deseas conectarte?', { cancel: 'Salir' });
+
+        switch (index) {
             case 0:
                 await this.conectarComoAdministrador();
                 break;
@@ -26,8 +31,54 @@ export class Login {
             case 2:
                 await this.conectarComoVip();
                 break;
+            case 3:
+                await this.registrarNuevoUsuario();
+                break;
             default:
                 console.log("Saliendo del sistema...");
+        }
+    }
+
+    async registrarNuevoUsuario() {
+        try {
+            // Conectar con el usuario administrador
+            this.client = new MongoClient(this.adminUri);
+            await this.client.connect();
+            console.log("Conectado como administrador para crear nuevo usuario.");
+    
+            const nombre = readlineSync.question('Ingrese el nombre del nuevo usuario: ');
+            const contraseña = readlineSync.question('Ingrese la contraseña del nuevo usuario: ', { hideEchoBack: true });
+    
+            const db = this.client.db('cineCampus');
+    
+            // Crear el nuevo usuario
+            await db.command({
+                createUser: nombre,
+                pwd: contraseña,
+                roles: [
+                    { role: "readWrite", db: this.dbName }
+                ]
+            });
+    
+            console.log(`Usuario ${nombre} creado exitosamente.`);
+    
+            // Cerrar la conexión de administrador
+            await this.client.close();
+    
+            // Reconectar con el nuevo usuario
+            const newUserUri = `${process.env.MONGO}${nombre}:${encodeURIComponent(contraseña)}${process.env.DOMINIO}${process.env.DB_NAME}?retryWrites=true&w=majority`;
+            this.client = new MongoClient(newUserUri);
+            await this.client.connect();
+            console.log(`Reconectado como ${nombre}.`);
+    
+            this.mostrarMenuUsuario();
+    
+        } catch (error) {
+            console.error("Error:", error);
+        } finally {
+            if (this.client) {
+                await this.client.close();
+            }
         }
     }
 
@@ -35,7 +86,7 @@ export class Login {
         const user = readlineSync.question('Por favor, ingresa tu nombre de usuario: ');
         const pws = readlineSync.question('Por favor, ingresa tu contraseña: ', { hideEchoBack: true });
         console.clear();
-    
+
         if (user === 'adminCineCampus' && pws === '1234') {
             try {
                 console.log("Conectando a MongoDB...");
@@ -65,7 +116,7 @@ export class Login {
                 'Eliminar Película'
             ];
 
-            const index = readlineSync.keyInSelect(opciones, '¿Qué acción deseas realizar?', {cancel: 'Salir'});
+            const index = readlineSync.keyInSelect(opciones, '¿Qué acción deseas realizar?', { cancel: 'Salir' });
 
             switch (index) {
                 case 0:
@@ -147,7 +198,7 @@ export class Login {
                 'Cancelar Reservación'
             ];
 
-            const index = readlineSync.keyInSelect(opciones, '¿Qué acción deseas realizar?', {cancel: 'Salir'});
+            const index = readlineSync.keyInSelect(opciones, '¿Qué acción deseas realizar?', { cancel: 'Salir' });
 
             switch (index) {
                 case 0:
@@ -175,8 +226,8 @@ export class Login {
         }
     }
 
-    
-    
+
+
 
     async mostrarMenuVip(resultPeliculas) {
         let continuar = true;
@@ -190,7 +241,7 @@ export class Login {
                 'Ver Beneficios VIP'
             ];
 
-            const index = readlineSync.keyInSelect(opciones, '¿Qué acción deseas realizar?', {cancel: 'Salir'});
+            const index = readlineSync.keyInSelect(opciones, '¿Qué acción deseas realizar?', { cancel: 'Salir' });
 
             switch (index) {
                 case 0:
