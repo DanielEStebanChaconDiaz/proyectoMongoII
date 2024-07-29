@@ -107,6 +107,75 @@ export class Users {
             console.log('ID de asiento no válido.');
         }
     }
+
+    async reservarBoleto(resultSeats, descuento) {
+        // Mostrar asientos disponibles
+        console.log("Asientos Disponibles:");
+        console.log(resultSeats);
+    
+        // Solicitar al usuario que ingrese el ID del asiento
+        const seatId = readlineSync.question('Ingrese el ID del asiento que desea reservar: ');
+    
+        // Buscar el asiento en los datos proporcionados
+        const asiento = resultSeats.find(seat => seat.seatId === parseInt(seatId));
+        
+        
+        if (asiento) {
+            if (asiento.estado === 'disponible') {
+                // Cuando se va a realizar la reserva:
+                const precioOriginal = asiento.precio; // Asume que este es el precio base del boleto
+                const precioFinal = precioOriginal * (1 - descuento);
+    
+                console.log(`Precio original del boleto: $${precioOriginal}`);
+                if (descuento > 0) {
+                    console.log(`Descuento aplicado: ${descuento * 100}%`);
+                    console.log(`Precio final del boleto: $${precioFinal}`);
+                }
+    
+                // Obtener información del usuario
+                const nombre = readlineSync.question('Ingrese su nombre: ');
+                const email = readlineSync.question('Ingrese su email: ');
+    
+                // Generar un código de reserva único
+                const codigoReserva = Math.random().toString(36).substring(2, 10).toUpperCase();
+    
+                // Actualizar el estado del asiento a 'reservado'
+                try {
+                    const result = await this.db.collection('seats').updateOne(
+                        { seatId: parseInt(seatId) },
+                        { $set: { 
+                            estado: 'reservado',
+                            reservadoPor: {
+                                nombre: nombre,
+                                email: email,
+                                codigoReserva: codigoReserva
+                            }
+                        }}
+                    );
+    
+                    if (result.modifiedCount > 0) {
+                        console.log(`
+                        Reserva realizada con éxito:
+                        - Asiento: ${seatId}
+                        - Nombre: ${nombre}
+                        - Email: ${email}
+                        - Código de reserva: ${codigoReserva}
+                        - Precio final: $${precioFinal}
+                        `);
+                        console.log("Por favor, guarde su código de reserva. Lo necesitará para canjear su boleto en taquilla.");
+                    } else {
+                        console.log('No se pudo actualizar el estado del asiento. Inténtalo de nuevo.');
+                    }
+                } catch (err) {
+                    console.error('Error al actualizar el estado del asiento:', err);
+                }
+            } else {
+                console.log(`El asiento ${seatId} no está disponible para la reserva.`);
+            }
+        } else {
+            console.log('ID de asiento no válido.');
+        }
+    }
     
     async closeConnection() {
         if (this.connection) {

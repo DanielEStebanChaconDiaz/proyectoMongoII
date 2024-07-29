@@ -243,7 +243,7 @@ export class Login {
                 await this.users.comprarBoleto(resultSeats, descuento);
                 break;
             case 1:
-                await this.reservarBoleto(resultSeats);
+                await this.users.reservarBoleto(resultSeats);
                 break;
             default:
                 console.log("Operación cancelada.");
