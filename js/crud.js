@@ -187,7 +187,7 @@ export class Login {
                     await this.procesarCompraOReserva(resultFunctions, resultSeats);
                     break;
                 case 2:
-                    await this.cancelarReservacion();
+                    await this.users.cancelarReserva();
                     break;
                 default:
                     continuar = false;

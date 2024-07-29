@@ -118,8 +118,7 @@ export class Users {
     
         // Buscar el asiento en los datos proporcionados
         const asiento = resultSeats.find(seat => seat.seatId === parseInt(seatId));
-        
-        
+    
         if (asiento) {
             if (asiento.estado === 'disponible') {
                 // Cuando se va a realizar la reserva:
@@ -127,6 +126,7 @@ export class Users {
                 const precioFinal = precioOriginal * (1 - descuento);
     
                 console.log(`Precio original del boleto: $${precioOriginal}`);
+                console.log(`Descuento: ${descuento}`);
                 if (descuento > 0) {
                     console.log(`Descuento aplicado: ${descuento * 100}%`);
                     console.log(`Precio final del boleto: $${precioFinal}`);
@@ -176,6 +176,39 @@ export class Users {
             console.log('ID de asiento no válido.');
         }
     }
+    
+    async cancelarReserva() {
+        // Solicitar al usuario que ingrese el código de reserva
+        const codigoReserva = readlineSync.question('Ingrese el código de reserva que desea cancelar: ');
+    
+        try {
+            // Buscar el asiento reservado por el código de reserva
+            const asientoReservado = await this.db.collection('seats').findOne({ 'reservadoPor.codigoReserva': codigoReserva });
+    
+            if (asientoReservado) {
+                // Actualizar el estado del asiento a 'disponible' y eliminar la información de la reserva
+                const result = await this.db.collection('seats').updateOne(
+                    { seatId: asientoReservado.seatId },
+                    { $set: { estado: 'disponible' }, $unset: { reservadoPor: "" } }
+                );
+    
+                if (result.modifiedCount > 0) {
+                    console.log(`
+                    Reserva cancelada con éxito:
+                    - Asiento: ${asientoReservado.seatId}
+                    - Código de reserva: ${codigoReserva}
+                    `);
+                } else {
+                    console.log('No se pudo actualizar el estado del asiento. Inténtalo de nuevo.');
+                }
+            } else {
+                console.log('Código de reserva no válido o no encontrado.');
+            }
+        } catch (err) {
+            console.error('Error al cancelar la reserva:', err);
+        }
+    }
+    
     
     async closeConnection() {
         if (this.connection) {
