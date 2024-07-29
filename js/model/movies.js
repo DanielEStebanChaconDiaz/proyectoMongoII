@@ -1,6 +1,4 @@
-// models/movies.js
 import Connection from '../../db/connect/connect.js';
-import readlineSync from 'readline-sync';
 
 export class Movies {
     constructor() {
@@ -8,29 +6,27 @@ export class Movies {
         this.db = null;
     }
 
-    async connect(user, pws) {
+    async connect() {
         if (!this.db) {
             try {
-                await this.connection.login(user, pws);
+                // Usamos una conexión predefinida
                 this.db = await this.connection.connect();
             } catch (err) {
                 console.error('Error connecting to the database:', err);
             }
         }
     }
-
-    async getMovies(user, pws) {
-        await this.connect(user, pws);
+    async getMovieForName(){
+        await this.connect();
         try {
-            const collections = await this.db.collection('movies').find().toArray();
-            return collections;
+            const collection = await this.db.collection('movies').findOne({ title: 'Avengers' });
+            return collection;
         } catch (err) {
-            console.error('Error fetching movies:', err);
+            console.error('Error fetching movie:', err);
         }
     }
-
-    async getMoviesDescription(user, pws) {
-        await this.connect(user, pws);
+    async getMovie() {
+        await this.connect();
         try {
             const collections = await this.db.collection('movies').aggregate([
                 {
@@ -42,14 +38,11 @@ export class Movies {
                     }
                 },
                 {
-                    $unwind: '$Description'
-                },
-                {
                     $project: {
                         Title: '$title',
-                        Description: '$Description.description',
                         Genre: '$Description.genre',
-                        Duration: '$Description.duration'
+                        Duration: '$Description.duration',
+                        Sinopsis: '$Description'
                     }
                 }
             ]).toArray();
@@ -58,33 +51,82 @@ export class Movies {
             console.error('Error fetching movie descriptions:', err);
         }
     }
-    async agregarPelicula(user, pws) {
-        await this.connect(user, pws);
+    async getMoviesDescription() {
+        await this.connect();
+        try {
+            const collections = await this.db.collection('movies').aggregate([
+                {
+                    $lookup: {
+                        from: 'movie-description',
+                        localField: 'movieId',
+                        foreignField: 'movieId',
+                        as: 'Description'
+                    }
+                },
+                {
+                    $lookup: {
+                      from: 'cinemas',
+                      localField: 'movieId',
+                      foreignField: 'functions.movieId',
+                      as: 'Programacion'
+                    }
+                  },
+                {
+                    $unwind: '$Description'
+                },
+                {
+                    $unwind: '$Programacion'
+                },
+                {
+                    $project: {
+                        Title: '$title',
+                        Genre: '$Description.genre',
+                        Duration: '$Description.duration',
+                        Programacion: '$Programacion.functions'
+                    }
+                }
+            ]).toArray();
+            return collections;
+        } catch (err) {
+            console.error('Error fetching movie descriptions:', err);
+        }
+    }
+
+    async agregarPelicula() {
+        await this.connect();
         try {
             let movieId;
             let existingMovie;
             let title;
             let existingMovieName;
     
-            do {
-                movieId = parseInt(readlineSync.question('Ingrese el ID de la película: '));
-                existingMovie = await this.db.collection('movies').findOne({ movieId: movieId });
-                if (existingMovie) {
-                    console.log('Error: Ya existe una película con este ID. Inténtelo de nuevo.');
-                    continue;
-                }
+            // Datos predefinidos para prueba
+            const predefinedMovies = [
+                { movieId: 1, title: 'Inception' },
+                { movieId: 2, title: 'Interstellar' }
+            ];
     
-                title = readlineSync.question('Ingrese el título de la película: ');
-                existingMovieName = await this.db.collection('movies').findOne({ title: title });
-                if (existingMovieName) {
-                    console.log('Error: Ya existe una película con este título. Inténtelo de nuevo.');
-                }
-            } while (existingMovie || existingMovieName);
+            // Simula la entrada del usuario
+            movieId = 3; // Por ejemplo
+            existingMovie = predefinedMovies.find(movie => movie.movieId === movieId);
     
-            const rating = parseFloat(readlineSync.question('Ingrese el rating de la película (0-10): '));
-            const genre = readlineSync.question('Ingrese el género de la película: ');
-            const duration = parseInt(readlineSync.question('Ingrese la duración de la película (en minutos): '));
-            const description = readlineSync.question('Ingrese la descripción de la película: ');
+            if (existingMovie) {
+                console.log('Error: Ya existe una película con este ID. Inténtelo de nuevo.');
+                return 'Error: Ya existe una película con este ID.';
+            }
+    
+            title = 'The Dark Knight'; // Por ejemplo
+            existingMovieName = predefinedMovies.find(movie => movie.title === title);
+    
+            if (existingMovieName) {
+                console.log('Error: Ya existe una película con este título. Inténtelo de nuevo.');
+                return 'Error: Ya existe una película con este título.';
+            }
+    
+            const rating = 9.0; // Por ejemplo
+            const genre = 'Action'; // Por ejemplo
+            const duration = 152; // Por ejemplo
+            const description = 'A complex and thrilling movie'; // Por ejemplo
     
             // Obtener la fecha y hora actual
             const creationDate = new Date();
@@ -113,20 +155,23 @@ export class Movies {
             return 'Error al agregar la película: ' + err.message;
         }
     }
-    async dropMovie(user, pws) {
-        await this.connect(user, pws);
+
+    async dropMovie() {
+        await this.connect();
         try {
-            const movieId = parseInt(readlineSync.question('Ingrese el ID de la película que desea eliminar: '));
-            const existingMovie = await this.db.collection('movies').findOne({ movieId: movieId });
+            // Datos predefinidos para prueba
+            const predefinedMovieId = 3; // Por ejemplo
+    
+            const existingMovie = await this.db.collection('movies').findOne({ movieId: predefinedMovieId });
     
             if (existingMovie) {
-                await this.db.collection('movies').deleteOne({ movieId: movieId });
-                await this.db.collection('movie-description').deleteOne({ movieId: movieId });
+                await this.db.collection('movies').deleteOne({ movieId: predefinedMovieId });
+                await this.db.collection('movie-description').deleteOne({ movieId: predefinedMovieId });
                 console.log('Película eliminada con éxito.');
-                return `Película con ID ${movieId} eliminada con éxito.`;
+                return `Película con ID ${predefinedMovieId} eliminada con éxito.`;
             } else {
                 console.log('No se encontró la película con el ID ingresado.');
-                return `No se encontró la película con ID ${movieId}.`;
+                return `No se encontró la película con ID ${predefinedMovieId}.`;
             }
         } catch (err) {
             console.error('Error al eliminar la película:', err);
@@ -134,47 +179,6 @@ export class Movies {
         }
     }
 
-    async getMoviesFunction(user, pws) {
-        await this.connect(user, pws);
-        try {
-            const collections = await this.db.collection('movies').aggregate([
-                {
-                  $lookup: {
-                    from: 'cinemas',
-                    localField: 'movieId',
-                    foreignField: 'functions.movieId',
-                    as: 'Programacion'
-                  }
-                },
-                {
-                  $unwind: '$Programacion'
-                },
-                {
-                  $unwind: '$Programacion.functions'
-                },
-                {
-                  $match: {
-                    'Programacion.functions.movieId':  1
-                  }
-                },
-                {
-                  $project: {
-                    title: 1,
-                    'Programacion.name': 1,
-                    'Programacion.location': 1,
-                    'Programacion.functions.startTime': 1,
-                    'Programacion.functions.endTime': 1,
-                    'Programacion.functions.room': 1
-                  }
-                }
-              ]).toArray();
-            return collections;
-        } catch (err) {
-            console.error('Error fetching movie descriptions:', err);
-        }
-    }
-    
-    
     async closeConnection() {
         if (this.connection) {
             await this.connection.close();

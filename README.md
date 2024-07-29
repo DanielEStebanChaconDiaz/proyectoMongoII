@@ -8,8 +8,7 @@ npm i
 ## Configuracion de archivo .env
 
 ```
-MONGO = 'mongodb://'
-DOMINIO = '@roundhouse.proxy.rlwy.net:17787/'
+MONGO_URI = 'mongodb://adminCineCampus:1234@roundhouse.proxy.rlwy.net:17787/cineCampus'
 DB_NAME = 'cineCampus'
 ```
 
