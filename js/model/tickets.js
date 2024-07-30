@@ -1,7 +1,7 @@
 import Connection from "../../db/connect/connect.js";
 import { Seats } from "./seats.js";
 
-export class Tickets{
+export class Tickets {
     constructor() {
         this.connection = new Connection();
         this.db = null;
@@ -64,7 +64,7 @@ export class Tickets{
     async reservarBoleto() {
         await this.connect();
         // Datos predefinidos
-        const resultSeats = await this.getSeats();
+        const resultSeats = await this.seats.getSeats();
         const seatId = 5; // Asume que el ID del asiento a reservar es 1
         const descuento = 0.15; // Asume un 15% de descuento
         const nombre = 'John Doe'; // Nombre del usuario para reserva
@@ -97,14 +97,16 @@ export class Tickets{
                 try {
                     const result = await this.db.collection('seats').updateOne(
                         { seatId: seatId },
-                        { $set: { 
-                            estado: 'reservado',
-                            reservadoPor: {
-                                nombre: nombre,
-                                email: email,
-                                codigoReserva: codigoReserva
+                        {
+                            $set: {
+                                estado: 'reservado',
+                                reservadoPor: {
+                                    nombre: nombre,
+                                    email: email,
+                                    codigoReserva: codigoReserva
+                                }
                             }
-                        }}
+                        }
                     );
 
                     if (result.modifiedCount > 0) {
@@ -130,17 +132,23 @@ export class Tickets{
             console.log('ID de asiento no válido.');
         }
     }
-    async cancelarReserva() {
+    /**
+     * Cancels a seat reservation based on the provided reservation code.
+     *
+     * @param {string} codigo - The reservation code to cancel.
+     * @returns {Promise<void>} - A promise that resolves when the cancellation is successful or rejects with an error.
+     */
+    async cancelarReserva(codigo) {
         await this.connect();
-        // Datos predefinidos
-        const codigoReserva = '32LZPSJH'; // Asume un código de reserva para cancelar
+        // Assumed predefined data
+        const codigoReserva = codigo; // Assumes a reservation code to cancel
 
         try {
-            // Buscar el asiento reservado por el código de reserva
+            // Search for the reserved seat using the reservation code
             const asientoReservado = await this.db.collection('seats').findOne({ 'reservadoPor.codigoReserva': codigoReserva });
 
             if (asientoReservado) {
-                // Actualizar el estado del asiento a 'disponible' y eliminar la información de la reserva
+                // Update the seat state to 'disponible' and remove reservation information
                 const result = await this.db.collection('seats').updateOne(
                     { seatId: asientoReservado.seatId },
                     { $set: { estado: 'disponible' }, $unset: { reservadoPor: "" } }
@@ -148,10 +156,10 @@ export class Tickets{
 
                 if (result.modifiedCount > 0) {
                     console.log(`
-                    Reserva cancelada con éxito:
-                    - Asiento: ${asientoReservado.seatId}
-                    - Código de reserva: ${codigoReserva}
-                    `);
+                Reserva cancelada con éxito:
+                - Asiento: ${asientoReservado.seatId}
+                - Código de reserva: ${codigoReserva}
+                `);
                 } else {
                     console.log('No se pudo actualizar el estado del asiento. Inténtalo de nuevo.');
                 }

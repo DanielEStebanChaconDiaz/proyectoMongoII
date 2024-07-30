@@ -15,6 +15,10 @@ const obj4 = new Movies
 // console.log(await obj.getUsersDescription());
 //!API para agregar Usuarios
 // console.log(await obj.registrarNuevoUsuario());
+//!API para asignar usuarios vip
+console.log (await obj.updateRole());
+//!API para validar vip-cards
+// console.log(await obj.verificarTarjetaVIP('123456789'));
 //!API para listar Asientos disponibles
 // console.log(await obj2.getSeats())
 //!API para comprar asientos
@@ -22,7 +26,7 @@ const obj4 = new Movies
 //!API para reservar asientos
 // console.log(await obj3.reservarBoleto());
 //!API para cancelar reserva
-// console.log(await obj3.cancelarReserva()); 
+// console.log(await obj3.cancelarReserva('CLE1QUY0')); 
 //!API para listar peliculas
 // console.log(await obj4.getMoviesDescription());
 //!API para listar peliculas con sinopsis

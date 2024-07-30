@@ -6,7 +6,7 @@ export default class Users {
         this.connection = new Connection();
         this.client = null;
         this.db = null;
-        this.adminUri = 'mongodb://adminCineCampus:1234@roundhouse.proxy.rlwy.net:17787/cineCampus'
+        this.adminUri = 'mongodb://mongo:QzTrGVnGyYjBHnmnBVuVcOtJNGxHvEAL@roundhouse.proxy.rlwy.net:17787/'
         this.dbName = 'cineCampus';
     }
 
@@ -29,7 +29,7 @@ export default class Users {
             console.log("Conectado como administrador para crear nuevo usuario.");
 
             // Datos predefinidos
-            const nombre = 'pepe'; // Nombre del nuevo usuario
+            const nombre = 'juanito'; // Nombre del nuevo usuario
             const contraseña = '1234'; // Contraseña del nuevo usuario
 
             const db = this.client.db(this.dbName);
@@ -39,12 +39,12 @@ export default class Users {
                 createUser: nombre,
                 pwd: contraseña,
                 roles: [
-                    { role: "readWrite", db: this.dbName }
+                    { role: "usuario", db: this.dbName }
                 ]
             });
 
-            const name = 'pepe';
-            const email = 'pepemovies@gmail.com';
+            const name = 'juanito';
+            const email = 'juanitojuega@gmail.com';
             const numero = 319008921;
             const CC = 1097495849;
             const Estado = 'Estandar'
@@ -71,6 +71,67 @@ export default class Users {
             }
         }
         return "";
+    }
+
+    async updateRole(){
+        try {
+            // Conectar con el usuario administrador
+            this.client = new MongoClient(this.adminUri);
+            await this.client.connect();
+            console.log("Conectado como administrador para actualizar usuario.");
+        
+            // Datos predefinidos
+            const nombre = 'pepe'; // Nombre del usuario a actualizar
+            const contraseña = '1234'; // Nueva contraseña del usuario
+        
+            const db = this.client.db(this.dbName);
+        
+            // Actualizar el usuario existente
+            await db.command({
+                updateUser: nombre,
+                pwd: contraseña,
+                roles: [
+                    { role: "usuario", db: this.dbName },
+                    { role: "usuarioVip", db: this.dbName } // Añadir rol de usuario VIP
+                ]
+            });
+        
+            const email = 'juanitojuega@gmail.com';
+            const numero = 319008921;
+            const CC = 1097495849;
+            const Estado = 'VIP'; // Cambiado a VIP
+        
+            // Actualizar el usuario en la colección 'users'
+            const result = await db.collection('users').updateOne(
+                { username: nombre },
+                {
+                    $set: {
+                        email: email,
+                        numero: numero,
+                        CC: CC,
+                        Estado: Estado,
+                    }
+                }
+            );
+        
+            if (result.matchedCount === 0) {
+                console.log(`Usuario ${nombre} no encontrado.`);
+            } else if (result.modifiedCount === 0) {
+                console.log(`No se realizaron cambios para el usuario ${nombre}.`);
+            } else {
+                console.log(`Usuario ${nombre} actualizado exitosamente.`);
+            }
+        
+            // Cerrar la conexión de administrador
+            await this.client.close();
+        
+        } catch (error) {
+            console.error("Error:", error);
+        } finally {
+            if (this.client) {
+                await this.client.close();
+            }
+        }
     }
 
     async getUsers() {
@@ -107,7 +168,7 @@ export default class Users {
         await this.connect();
         try {
             const tarjeta = await this.db.collection('vip-cards').findOne({ cardNumber: numeroTarjeta });
-            return tarjeta !== null;
+            return 'Usted posee un 15% de descuento por ser cliente vip';
         } catch (error) {
             console.error("Error al verificar la tarjeta VIP:", error);
             return false;

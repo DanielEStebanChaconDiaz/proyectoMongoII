@@ -5,10 +5,24 @@
 npm i
 ```
 
-## Configuracion de archivo .env
+## Configuracion de archivo .env para administrador
 
 ```
 MONGO_URI = 'mongodb://adminCineCampus:1234@roundhouse.proxy.rlwy.net:17787/cineCampus'
+DB_NAME = 'cineCampus'
+```
+
+## Configuracion de archivo .env para usuario
+
+```
+MONGO_URI = 'mongodb://pepe:1234@roundhouse.proxy.rlwy.net:17787/cineCampus'
+DB_NAME = 'cineCampus'
+```
+
+## Configuracion de archivo .env para usuario vip
+
+```
+MONGO_URI = 'mongodb://pepe:1234@roundhouse.proxy.rlwy.net:17787/cineCampus'
 DB_NAME = 'cineCampus'
 ```
 
