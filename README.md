@@ -1,5 +1,32 @@
 ### Proyecto: CineCampus
 
+## Instalar dependencias:
+```
+npm i
+```
+
+## Configuracion de archivo .env para administrador
+
+```
+MONGO_URI = 'mongodb://adminCineCampus:1234@roundhouse.proxy.rlwy.net:17787/cineCampus'
+DB_NAME = 'cineCampus'
+```
+
+## Configuracion de archivo .env para usuario
+
+```
+MONGO_URI = 'mongodb://pepe:1234@roundhouse.proxy.rlwy.net:17787/cineCampus'
+DB_NAME = 'cineCampus'
+```
+
+## Configuracion de archivo .env para usuario vip
+
+```
+MONGO_URI = 'mongodb://pepe:1234@roundhouse.proxy.rlwy.net:17787/cineCampus'
+DB_NAME = 'cineCampus'
+```
+
+
 #### Problemtica
 
 CineCampus es una empresa de entretenimiento que se especializa en ofrecer una experiencia de cine completa y personalizada. La empresa desea desarrollar una aplicación web que permita a los usuarios seleccionar películas, comprar boletos y asignar asientos de manera eficiente y cómoda. La aplicación también ofrecerá opciones de descuento para usuarios con tarjeta VIP y permitirá realizar compras en línea.
