@@ -47,11 +47,13 @@ export default class Users {
             const email = 'pepemovies@gmail.com';
             const numero = 319008921;
             const CC = 1097495849;
+            const Estado = 'Estandar'
             const userNew = {
                 username: name,
                 email: email,
                 numero: numero,
-                CC: CC
+                CC: CC,
+                Estado: Estado,
             };
 
             // Inserta el nuevo usuario en la colección 'users'
@@ -92,6 +94,15 @@ export default class Users {
         }
     }
 
+    async getUsersDescription() {
+        await this.connect();
+        try {
+            const collection = await this.db.collection('users').find().toArray();
+            return collection;
+        } catch (err) {
+            console.error('Error fetching user:', err);
+        }
+    }
     async verificarTarjetaVIP(numeroTarjeta) {
         await this.connect();
         try {

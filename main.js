@@ -11,8 +11,10 @@ const obj3 = new Tickets
 const obj4 = new Movies
 //!API para Listar Usuarios
 // console.log(await obj.getUsers());
+//!API para listar Usuarios con descripcion
+// console.log(await obj.getUsersDescription());
 //!API para agregar Usuarios
-console.log(await obj.registrarNuevoUsuario());
+// console.log(await obj.registrarNuevoUsuario());
 //!API para listar Asientos disponibles
 // console.log(await obj2.getSeats())
 //!API para comprar asientos
