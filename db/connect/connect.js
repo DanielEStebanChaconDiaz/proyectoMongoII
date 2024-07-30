@@ -4,11 +4,23 @@ dotenv.config();
 
 const uri = process.env.MONGO_URI;
 
+/**
+ * Manages a MongoDB connection.
+ */
 export default class Connection {
+    /**
+     * Creates a new instance of Connection.
+     */
     constructor(){
         this.client = new MongoClient(uri);
     }
 
+    /**
+     * Connects to MongoDB.
+     *
+     * @returns {Promise<import("mongodb").Db>} The connected MongoDB database.
+     * @throws {Error} If there is an error connecting to MongoDB.
+     */
     async connect() {
         if (!this.db){
             try {
@@ -23,6 +35,12 @@ export default class Connection {
         return this.db;
     }
 
+    /**
+     * Returns the connected MongoDB database.
+     *
+     * @returns {import("mongodb").Db} The connected MongoDB database.
+     * @throws {Error} If the MongoDB connection is not established.
+     */
     getDb() {
         if (!this.db) {
             throw new Error("MongoDB connection not established");
@@ -30,6 +48,9 @@ export default class Connection {
         return this.db;
     }
 
+    /**
+     * Closes the MongoDB connection.
+     */
     async close() {
         if (this.client) {
             await this.client.close();
