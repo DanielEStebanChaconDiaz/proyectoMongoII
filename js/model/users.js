@@ -1,12 +1,14 @@
 import Connection from '../../db/connect/connect.js';
 import { MongoClient } from 'mongodb';
+import dotenv from 'dotenv';
+dotenv.config();
 
 export default class Users {
     constructor() {
         this.connection = new Connection();
         this.client = null;
         this.db = null;
-        this.adminUri = 'mongodb://mongo:QzTrGVnGyYjBHnmnBVuVcOtJNGxHvEAL@roundhouse.proxy.rlwy.net:17787/'
+        this.adminUri = process.env.MONGO_URI;
         this.dbName = 'cineCampus';
     }
 
