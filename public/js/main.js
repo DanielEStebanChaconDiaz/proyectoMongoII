@@ -1,34 +1,79 @@
+document.addEventListener('DOMContentLoaded', function() {
+    // Llama a la función para cargar todas las películas cuando la página se carga
+    loadMovies();
+});
 
-const Seats = require('../js/module/seats')
-// import Connection from '../db/connect/connect.js';
+function loadMovies() {
+    const movieList = document.querySelector('.movie-list');
+    movieList.innerHTML = ''; // Limpiar resultados anteriores
 
-const obj = new Users;
-const obj2 = new Seats
-const obj3 = new Tickets
-const obj4 = new Movies
-//!API para Listar Usuarios
-// console.log(await obj.getUsers());
-//!API para listar Usuarios con descripcion
-// console.log(await obj.getUsersDescription());
-//!API para agregar Usuarios
-// console.log(await obj.registrarNuevoUsuario());
-//!API para asignar usuarios vip
-// console.log (await obj.updateRole());
-//!API para validar vip-cards
-// console.log(await obj.verificarTarjetaVIP('123456789'));
-//!API para listar Asientos disponibles
-console.log(await obj2.getSeats('showtime_1'));
-//!API para comprar asientos
-// console.log(await obj3.comprarBoleto())
-//!API para reservar asientos
-// console.log(await obj3.reservarBoleto());
-//!API para cancelar reserva
-// console.log(await obj3.cancelarReserva('9PJNHH03')); 
-//!API para listar peliculas
-// console.log(await obj4.getMoviesDescription());
-//!API para listar peliculas con sinopsis
-// console.log (await obj4.getMovie())
-//!API para listar pelicula por nombre
-// console.log(await obj4.getMovieForName())
-//!API para agregar peliculas
-// console.log(await obj4.agregarPelicula());
+    // Realizar la solicitud al servidor para obtener todas las películas
+    fetch('/movies/v1/all')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json(); // Intenta parsear la respuesta como JSON
+        })
+        .then(data => {
+            if (Array.isArray(data) && data.length > 0) {
+                // Mostrar todas las películas
+                const movieItems = data.map(movie => `
+                    <div class="movie">
+                        <img src="${movie.image_url}" alt="${movie.title}">
+                        <p>${movie.title}</p>
+                        <p>${movie.genre}</p>
+                    </div>
+                `).join('');
+                movieList.innerHTML = movieItems;
+            } else {
+                movieList.innerHTML = '<p>No se encontraron películas.</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching movies:', error);
+            movieList.innerHTML = '<p>Error al obtener las películas.</p>';
+        });
+}
+
+document.getElementById('searchForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario
+    
+    const searchInput = document.getElementById('searchInput').value.trim();
+    const movieList = document.querySelector('.movie-list');
+    movieList.innerHTML = ''; // Limpiar resultados anteriores
+
+    // Verificar que el campo de búsqueda no esté vacío
+    if (searchInput === '') {
+        movieList.innerHTML = '<p>Por favor, ingrese un título de película.</p>';
+        return;
+    }
+
+    // Realizar la solicitud al servidor
+    fetch(`/movies/v1?title=${encodeURIComponent(searchInput)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json(); // Intenta parsear la respuesta como JSON
+        })
+        .then(data => {
+            if (Array.isArray(data) && data.length > 0) {
+                // Mostrar los resultados de la búsqueda
+                const movieItems = data.map(movie => `
+                    <div class="movie">
+                        <img src="${movie.image_url}" alt="${movie.title}">
+                        <p>${movie.title}</p>
+                        <p>${movie.genre}</p>
+                    </div>
+                `).join('');
+                movieList.innerHTML = movieItems;
+            } else {
+                movieList.innerHTML = '<p>No se encontraron películas.</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching movie:', error);
+            movieList.innerHTML = '<p>Error al obtener la película.</p>';
+        });
+});
