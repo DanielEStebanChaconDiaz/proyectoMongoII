@@ -1,8 +1,5 @@
 
-import { Movies } from './js/model/movies.js';
-import { Seats } from './js/model/seats.js';
-import  Users  from './js/model/users.js';
-import { Tickets } from './js/model/tickets.js';
+const Seats = require('../js/module/seats')
 // import Connection from '../db/connect/connect.js';
 
 const obj = new Users;
@@ -16,17 +13,17 @@ const obj4 = new Movies
 //!API para agregar Usuarios
 // console.log(await obj.registrarNuevoUsuario());
 //!API para asignar usuarios vip
-console.log (await obj.updateRole());
+// console.log (await obj.updateRole());
 //!API para validar vip-cards
 // console.log(await obj.verificarTarjetaVIP('123456789'));
 //!API para listar Asientos disponibles
-// console.log(await obj2.getSeats())
+console.log(await obj2.getSeats('showtime_1'));
 //!API para comprar asientos
 // console.log(await obj3.comprarBoleto())
 //!API para reservar asientos
 // console.log(await obj3.reservarBoleto());
 //!API para cancelar reserva
-// console.log(await obj3.cancelarReserva('CLE1QUY0')); 
+// console.log(await obj3.cancelarReserva('9PJNHH03')); 
 //!API para listar peliculas
 // console.log(await obj4.getMoviesDescription());
 //!API para listar peliculas con sinopsis

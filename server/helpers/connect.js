@@ -1,5 +1,5 @@
-import { MongoClient } from "mongodb";
-import dotenv from 'dotenv';
+const  {MongoClient} = require("mongodb");
+const dotenv = require( 'dotenv');
 dotenv.config();
 
 const uri = process.env.MONGO_URI;
@@ -7,7 +7,7 @@ const uri = process.env.MONGO_URI;
 /**
  * Manages a MongoDB connection.
  */
-export default class Connection {
+module.exports = class Connection {
     /**
      * Creates a new instance of Connection.
      */
