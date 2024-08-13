@@ -1,0 +1,139 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+    color: #fff;
+}
+
+.container {
+    max-width: 375px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.status-bar {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.back-button, .more-options {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 24px;
+}
+
+h1 {
+    font-size: 18px;
+    margin: 0;
+}
+
+.imagen-poster{
+    width: 100%;
+    height: 29vh;
+    display: flex;
+    overflow-y: hidden;
+    align-self: center;
+
+
+
+}
+
+.imagen-poster img {
+  width: 23rem;
+  height: 24rem;
+  
+}
+.movie-poster {
+    height: 20%;
+
+    margin-bottom: 20px;
+    display: grid;
+    grid-template-rows: 250px 1fr;
+}
+
+.movie-info {
+    display: grid;
+    grid-template-columns: 68% 1fr;
+    grid-template-rows: repeat(1fr 2);
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+    border-radius: 0 0 10px 10px;
+}
+
+.movie-info h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.movie-info p {
+    font-size: 14px;
+}
+
+.watch-trailer {
+    background-color: #E50914;
+    width: 100%;
+    height: 3em;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.cast, .cinema-selection {
+    margin-bottom: 20px;
+}
+
+.cast-members {
+    display: flex;
+    overflow-x: scroll;
+}
+
+.cinema-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1E1E1E;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+.cinema-info h4 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.cinema-info p {
+    margin: 5px 0 0;
+    font-size: 12px;
+    color: #888;
+}
+
+.showtime {
+    background-color: #333;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.book-now {
+    background-color: #E50914;
+    color: #fff;
+    border: none;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 18px;
+    width: 100%;
+    margin-top: 20px;
+}
