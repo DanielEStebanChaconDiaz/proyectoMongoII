@@ -75,20 +75,23 @@ body {
     font-size: 1.2em;
 }
 
-.movie-list {
+.swiper-wrapper {
     display: flex;
-    overflow-x: scroll;
-    gap: 5%;
+    align-items: center;
     padding: 3%;
     height: 100%;
     margin-bottom: 1em;
 }
 
-.movie {
-    margin-right: 10px;
+.movie, .swiper-slide {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 70%;
 }
 
-.movie img {
+.movie img, .swiper-slide img {
     border-radius: 10px;
     width: 15em;
     height: 22em;
@@ -147,4 +150,46 @@ body {
     background: #222;
     border-radius: 25px;
     justify-content: space-around;
+}
+.swiper-pagination {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    border-radius: 50%;
+    background: #000;
+    opacity: 0.2;
+    margin: 0 4px;
+    transition: all 0.3s ease;
+}
+
+.swiper-pagination-bullet-active {
+    opacity: 1;
+    background: #ff0000; /* Cambiado a rojo */
+    width: 20px; /* Alargado */
+    border-radius: 4px; /* Menos redondeado para parecer más una pastilla */
+}
+
+/* Estilos adicionales para el efecto de fijación en el medio */
+.swiper-container {
+    padding-bottom: 30px; /* Espacio para la paginación */
+}
+
+.swiper-slide {
+    transition: all 0.3s ease;
+    opacity: 0.5;
+}
+
+.swiper-slide-active {
+    opacity: 1;
+    transform: scale(1.1); /* Hace que la slide activa sea ligeramente más grande */
 }

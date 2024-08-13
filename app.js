@@ -19,6 +19,11 @@ app.get('/movies', function (req, res) {
 });
 app.use('/movies', appMovie);
 
+app.get('/movie', function (req, res) {
+    res.sendFile(path.join(__dirname, process.env.EXPRESS_STATIC, 'views', 'movie.html'));
+});
+app.use('/movie', appMovie);
+
 // Middleware para manejar errores
 app.use((err, req, res, next) => {
     console.error(err.stack);

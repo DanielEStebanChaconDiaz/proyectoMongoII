@@ -60,6 +60,22 @@
             <button class="book-now">Book Now</button>
         </main>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const movieData = JSON.parse(localStorage.getItem('selectedMovie'));
+            if (movieData) {
+                document.querySelector('.imagen-poster img').src = movieData.image_url;
+                document.querySelector('.movie-info .text p:first-child').textContent = `${movieData.title} (${movieData.year || 'N/A'})`;
+                document.querySelector('.movie-info .text p:last-child').textContent = movieData.genre;
+                document.querySelector('.desciption p').textContent = movieData.description || 'No description available.';
+                // Aquí puedes agregar más lógica para llenar otros campos como el reparto, cines, etc.
+            }
+        });
+        
+        document.querySelector('.back-button').addEventListener('click', function() {
+            window.history.back();
+        });
+        </script>
 </body>
 
 </html>
