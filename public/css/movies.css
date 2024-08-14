@@ -4,6 +4,7 @@ body {
     color: #fff;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 .container {
@@ -13,21 +14,35 @@ body {
 
 .header {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
 }
 
-.header img {
+.bell {
+    width: 100%;
+    width: 50px;
+    height: 50px;
+}
+
+.header .profile {
     border-radius: 50%;
     width: 50px;
     height: 50px;
 }
 
 .header h1 {
-    font-size: 1.2em;
     margin: 0;
 }
 
+.watch{
+    font-size: 1em;
+}
+
+.saludo{
+    font-weight: 350;
+    font-size: .8em;
+
+}
 .search-bar {
     margin: 20px 0;
     display: flex;
@@ -166,7 +181,7 @@ body {
     height: 8px;
     display: inline-block;
     border-radius: 50%;
-    background: #000;
+    background: #fff;
     opacity: 0.2;
     margin: 0 4px;
     transition: all 0.3s ease;

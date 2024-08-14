@@ -18,7 +18,7 @@ module.exports = class Movie {
         return this.db;
     }
 
-    async getMoviesForTitle(title) {
+    async getMoviesForgenre(genre) {
         try {
             // Asegúrate de que showtime_id sea una cadena de 24 caracteres hexadecimales válidos
 
@@ -27,7 +27,26 @@ module.exports = class Movie {
             // Busca documentos en 'seats' donde showtime_id coincida
             const result = await this.db.collection('movies').aggregate([
                 {
-                    $match: { title: title }
+                    $match: { genre: genre }
+                }
+            ]).toArray();
+
+            return result;
+        } catch (err) {
+            console.error('Error al encontrar peliculas:', err);
+            throw err; // Propaga el error para que pueda ser manejado adecuadamente en otros lugares
+        }
+    }
+    async getMoviesForGenre(genre) {
+        try {
+            // Asegúrate de que showtime_id sea una cadena de 24 caracteres hexadecimales válidos
+
+            await this.connect(); // Asegúrate de que la conexión se establezca primero
+
+            // Busca documentos en 'seats' donde showtime_id coincida
+            const result = await this.db.collection('movies').aggregate([
+                {
+                    $match: { genre: genre }
                 }
             ]).toArray();
 

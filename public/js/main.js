@@ -11,7 +11,7 @@
             return;
         }
         movieList.innerHTML = ''; // Limpiar resultados anteriores
-
+    
         fetch('/movies/v1/all')
             .then(response => {
                 if (!response.ok) {
@@ -25,11 +25,11 @@
                         <div class="swiper-slide movie">
                             <img src="${movie.image_url}" alt="${movie.title}">
                             <p>${movie.title}</p>
-                            <p>${movie.genre}</p>
+                            <p>${Array.isArray(movie.genres) ? movie.genres.join(', ') : movie.genres}</p>
                         </div>
                     `).join('');
                     movieList.innerHTML = movieItems;
-
+    
                     initSwiper();
                 } else {
                     movieList.innerHTML = '<p>No se encontraron películas.</p>';
@@ -81,7 +81,7 @@
             return;
         }
 
-        fetch(`/movies/v1?title=${encodeURIComponent(searchInput)}`)
+        fetch(`/movies/v1?search=${encodeURIComponent(searchInput)}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -94,12 +94,12 @@
                         <div class="swiper-slide movie">
                             <img src="${movie.image_url}" alt="${movie.title}">
                             <p>${movie.title}</p>
-                            <p>${movie.genre}</p>
+                            <p>${Array.isArray(movie.genres) ? movie.genres.join(', ') : movie.genres}</p>
                         </div>
                     `).join('');
                     movieList.innerHTML = movieItems;
 
-                    initSwiper();
+                    // initSwiper();
                 } else {
                     movieList.innerHTML = '<p>No se encontraron películas.</p>';
                 }
