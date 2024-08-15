@@ -156,7 +156,16 @@ module.exports = class Movie {
                             image_url: "$movie_actors.image_url",
                             role: "$movie_actors.role"
                           }
-                        }
+                        },
+                        trailerUrl: { $first: "$trailerUrl" }
+                      }
+                    },
+                    {
+                      $lookup: {
+                        from: "cinemas",            // Nombre de la colección de cines
+                        localField: "_id",        // ID de la película que estamos buscando
+                        foreignField: "peliculas", // Campo en la colección de cines que contiene el array de IDs de películas
+                        as: "cinemas"             // Nombre del campo en el resultado que contendrá la información de los cines
                       }
                     },
                     {
@@ -164,11 +173,13 @@ module.exports = class Movie {
                         _id: 1,
                         title: 1,
                         image_url: 1,
+                        trailerUrl: 1,         // Muestra el array de actores agrupados
                         genres: 1,
                         release_date: 1,
                         year: 1,
                         synopsis: 1,
-                        movie_actors: 1            // Muestra el array de actores agrupados
+                        movie_actors: 1,  
+                        cinemas: 3, 
                       }
                     }
                   ]

@@ -99,7 +99,7 @@ function initSwiper() {
             modifier: 1,
             slideShadows: false,
         },
-        loop: false,
+        loop: true,
         pagination: {
             el: '.swiper-pagination',
             clickable: true,

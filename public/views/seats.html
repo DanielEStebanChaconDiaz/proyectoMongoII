@@ -1,12 +1,61 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Choose Seat</title>
+    <link rel="stylesheet" href="../css/asiento.css">
 </head>
-<body>
-    <h1>Seats</h1>
+<body class="dark">
+    <div class="container">
+        <h1 class="title">Choose Seat</h1>
+        <div class="screen-indicator">Screen This Way</div>
+        <div class="seat-grid">
+                <div class="row-label">
+                    <p>A</p>
+                    <p>B</p>
+                    <p>C</p>
+                    <p>D</p>
+                </div>
+
+            <div class="seats">
+            <div class="seat unavailable"></div>
+            <div class="seat unavailable"></div>
+            <div class="seat unavailable"></div>
+            <div class="seat unavailable"></div>
+            <div class="seat unavailable"></div>
+            <div class="seat unavailable"></div>
+            <div class="seat unavailable"></div>
+            <div class="seat selected">5</div>
+            <div class="seat unavailable"></div>
+            <div class="seat unavailable"></div>
+            <div class="seat available"></div>
+            <div class="seat available"></div>
+            <div class="seat available"></div>
+            <div class="seat available"></div>
+            <div class="seat available"></div>
+            <div class="seat available"></div>
+            <div class="seat available"></div>
+            <div class="seat available"></div>
+            <div class="seat available"></div>
+            <div class="seat available"></div>
+            </div>
+        </div>
+        <div class="date-selector">
+            <button class="date-button selected">Fri 17</button>
+            <button class="date-button">Sat 18</button>
+            <button class="date-button">Sun 19</button>
+            <button class="date-button">Mon 20</button>
+            <button class="date-button">Tue 21</button>
+        </div>
+        <div class="time-selector">
+            <button class="time-button selected">13:00 $5.25 3D</button>
+            <button class="time-button">15:45 $5.99 3D</button>
+            <button class="time-button">18:50 $4.50 3D</button>
+            <button class="time-button">20:30 $6.25 3D</button>
+        </div>
+        <div class="price">Price $24,99</div>
+        <button class="buy-button">Buy ticket</button>
+    </div>
 </body>
 </html>

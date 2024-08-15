@@ -1,0 +1,126 @@
+:root {
+    --background: #121212;
+    --foreground: #FFFFFF;
+    --muted: #333333;
+    --muted-foreground: #888888;
+    --primary: #FF0000;
+    --destructive: #FF0000;
+    --destructive-foreground: #FFFFFF;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--background);
+    color: var(--foreground);
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    height: 100vh;
+    /* margin: 0 auto; */
+}
+
+.title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.screen-indicator {
+    text-align: center;
+    color: var(--muted-foreground);
+    margin-bottom: 1rem;
+}
+.rows{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(5, 1fr);
+    width: 100%;
+}
+.seat-grid {
+    display: grid;
+    grid-template-columns: 0.1fr 1fr;
+    margin-bottom: 1rem;
+    justify-items: center;
+}
+.seats{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-auto-rows: 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    justify-items: center;
+}
+
+.row-label {
+    color: var(--muted-foreground);
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-rows: 1fr;
+    justify-items: center;
+}
+
+.seat {
+    padding: 5%;
+    width: 60%;
+    height: 100%;
+    border-radius: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.seat.unavailable {
+    background-color: var(--muted);
+}
+
+.seat.available {
+    background-color: var(--foreground);
+}
+
+.seat.selected {
+    background-color: var(--primary);
+    color: var(--foreground);
+}
+
+.date-selector, .time-selector {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.date-button, .time-button {
+    background-color: var(--muted);
+    color: var(--muted-foreground);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    cursor: pointer;
+}
+
+.date-button.selected, .time-button.selected {
+    background-color: var(--primary);
+    color: var(--foreground);
+}
+
+.price {
+    font-size: 1.25rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.buy-button {
+    background-color: var(--destructive);
+    color: var(--destructive-foreground);
+    border: none;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    width: 100%;
+    font-size: 1rem;
+    cursor: pointer;
+}

@@ -1,6 +1,7 @@
 const express = require('express');
 const appSeats = require('./server/routes/asiento.routes');
 const appMovie = require('./server/routes/movie.routes');
+const appCinemas = require('./server/routes/cinemas.routes')
 const path = require('path'); // Asegúrate de requerir 'path' para manejar rutas de archivos
 const app = express();
 
@@ -23,6 +24,10 @@ app.get('/movie', function (req, res) {
     res.sendFile(path.join(__dirname, process.env.EXPRESS_STATIC, 'views', 'movie.html'));
 });
 app.use('/movie', appMovie);
+app.get('/movie', function (req, res) {
+    res.sendFile(path.join(__dirname, process.env.EXPRESS_STATIC, 'views', 'movie.html'));
+});
+app.use('/movie', appCinemas);
 
 // Middleware para manejar errores
 app.use((err, req, res, next) => {
