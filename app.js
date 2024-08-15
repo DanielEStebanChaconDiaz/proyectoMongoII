@@ -32,5 +32,5 @@ app.use((err, req, res, next) => {
 
 // Inicia el servidor
 app.listen({ host: process.env.EXPRESS_HOST, port: process.env.EXPRESS_PORT }, () => {
-    console.log(`http://${process.env.EXPRESS_HOST}:${process.env.EXPRESS_PORT}`);
+    console.log(`http://${process.env.EXPRESS_HOST}:${process.env.EXPRESS_PORT}/movies`);
 });

@@ -5,6 +5,8 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    height: 100vh;
+    width: 100%;
 }
 
 .container {
@@ -106,6 +108,7 @@ body {
     width: 70%;
 }
 
+
 .movie img, .swiper-slide img {
     border-radius: 10px;
     width: 15em;
@@ -122,49 +125,61 @@ body {
     bottom: 0;
     left: 0;
     width: 100%;
-    display: flex;
-    justify-content: space-around;
-    padding: 10px 0;
-    background-color: #222;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    background: #222;
+    height: 12vh;
+    border-radius: 15px;
+    z-index: 100;
 }
 
 .bottom-nav .nav-item {
     text-align: center;
     color: #fff;
+    padding: 20%;
 }
 
-.bottom-nav .nav-item img {
-    width: 25px;
-    height: 25px;
-    display: block;
-    margin: 0 auto 5px;
-}
+.nav-item i{
+    font-size: x-large;
+    font-weight: 500;
 
-.comming {
-    width: 100%;
+}
+.nav-item:first-child{
+    color: red;
+}
+.nav-item p{
+    margin: 0;
 }
 
 .movie-list-comming {
     display: flex;
-    overflow-x: auto; /* Permite el desplazamiento horizontal */
-    padding: 10px 0; /* Espaciado vertical */
-    justify-content: space-around;
-}
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 2%;
+    align-items: center;
 
+}
+.comming{
+    margin-bottom: 5.7rem;
+    margin-left: 1rem;
+}
 .movie-list-comming img {
     border-radius: 10px;
-    width: 20%;
-    height: auto;
+    width: 5rem;
+    height: 5rem;
 }
 
 .movie-comming {
     display: flex;
     align-items: center;
-    width: 100%;
-    padding: 2%;
     background: #222;
-    border-radius: 25px;
-    justify-content: space-around;
+    border-radius: 1.5rem;
+    margin-bottom: 2%;
+    padding: 0.5rem;
+    width: 95%;
+    padding-left: 4%;
+    padding-right: 0;
+    gap:1.5rem;
 }
 .swiper-pagination {
     position: absolute;
@@ -174,6 +189,29 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.name{
+    font-weight: 500;
+    font-size: 1.1em;
+}
+
+.name-comming{
+    /* font-weight: 500; */
+    font-size: 1.1em;
+    margin: 0;
+    padding: 0;
+}
+
+.genre-comming{
+    font-size: 0.9em;
+    margin: 0;
+    padding: 0;
+}
+
+.genre{
+    font-size: 0.8em;
+    color: #aaa;
 }
 
 .swiper-pagination-bullet {

@@ -1,28 +1,160 @@
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: #fff;
     margin: 0;
     padding: 0;
-    background-color: #000;
-    color: #fff;
+    
+    min-height: 100vh;
+    background-color: #1E1E1E;
 }
 
 .container {
-    max-width: 375px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    align-items: center;
     margin: 0 auto;
-    padding: 20px;
 }
-
-.status-bar {
+.header {
     display: flex;
     justify-content: space-between;
-    padding: 5px 0;
+    height: 10vh;
+    align-items: center;
+    width: 100%;
+}
+.header i {
+    font-weight: 500;
+    font-size: xx-large;
+}
+.header h1{
+    color: #fff;
+    font-size: 1.5rem;
+    text-align: center;
+}
+.card {
+    color: #ffffff;
+    padding: .7rem;
+    border-radius: 8px;
+}
+.title {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    margin: 0;
+    padding: 0;
+}
+.title h2{
+    margin: 0;
+    padding: 0;
+}
+.trailer{
+    display: flex;
+    align-items: center;
+    color: #fff;
+    border: none;
+    background: red;
+    border-radius: 10px;
+    width: 8.25rem;
+    height: 2.375rem;
+    font-weight: 500;
+}
+.trailer i {
+    font-size: 2rem;
+
+}
+.cast-title{
+    font-weight: 500;
+    margin-bottom: 2%;
+    padding: 0;
+    font-size: 1.8rem;
+}
+.cast{
+    display: flex;
+    overflow-x: auto;
+    gap: 10%;
+}
+.cast img{
+    width: 4.563rem;
+    height: 4.563rem;
+    border-radius: 100%;
+    object-fit: cover;
+}
+.actor{
+    display: flex;
+    width: 100%;
+    gap: 10%;
+    
+}
+.actor-info{
+    width: 10.438rem;
+    display: flex;
+    flex-direction: column;
+    font-size: small;
+    justify-content: center;
+}
+.actor p{
+    margin: 0;
+    padding: 0;
+
+}
+.movie-img {
+    border-radius: 8px;
+    margin-bottom: 16px;
+    width: 100%;
+    height: 12.75rem;
+    object-fit: cover;
 }
 
-header {
+.card h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.card .title .synopsis {
+    font-size: 1rem;
+    margin: 0;
+    margin-bottom: 1.875rem;
+    padding:  0;
+}
+
+.card .muted {
+    color: #666666;
+}
+
+.card .cast-list,
+.card .cinema-list {
+    text-align: left;
+}
+
+.card .cinema-list div {
+    background-color: #333333;
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.card .button {
+    background-color: #E50914;
+    color: #ffffff;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.card .button:hover {
+    background-color: #b20710;
+}
+
+/* Additional Styles */
+.header, .status-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    padding: 5px 0;
 }
 
 .back-button, .more-options {
@@ -37,25 +169,21 @@ h1 {
     margin: 0;
 }
 
-.imagen-poster{
+.imagen-poster {
     width: 100%;
     height: 29vh;
     display: flex;
     overflow-y: hidden;
     align-self: center;
-
-
-
 }
 
 .imagen-poster img {
-  width: 23rem;
-  height: 24rem;
-  
+    width: 100%;
+    height: auto;
 }
+
 .movie-poster {
     height: 20%;
-
     margin-bottom: 20px;
     display: grid;
     grid-template-rows: 250px 1fr;
