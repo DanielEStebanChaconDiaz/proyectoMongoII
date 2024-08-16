@@ -26,9 +26,11 @@ module.exports = class Movie {
 
             // Busca documentos en 'seats' donde showtime_id coincida
             const result = await this.db.collection('movies').aggregate([
-                {
-                    $match: { title: title }
+              {
+                $match: {
+                    title: { $regex: new RegExp(title) }
                 }
+              }
             ]).toArray();
 
             return result;

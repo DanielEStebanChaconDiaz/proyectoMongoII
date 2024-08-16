@@ -3,8 +3,77 @@ document.addEventListener('DOMContentLoaded', function () {
     loadMoviesComming();    
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+    // Obtener los elementos de la navegación
+    const homeButton = document.querySelector('.bottom-nav .nav-item:nth-child(1)');
+    const browseButton = document.querySelector('.bottom-nav .nav-item:nth-child(2)');
+    const searchInput = document.getElementById('searchInput');
+
+    // Función para redirigir al /movies
+    function redirectToMovies() {
+        window.location.href = '/movies';
+    }
+
+    // Función para enfocar el campo de búsqueda
+    function focusSearchInput() {
+        searchInput.focus();
+    }
+
+    // Agregar eventos de clic
+    homeButton.addEventListener('click', redirectToMovies);
+    browseButton.addEventListener('click', focusSearchInput);
+});
+
+
 let swiper; // Variable global para la instancia de Swiper
 
+// Función para guardar datos en caché
+function saveToCache(key, data) {
+    localStorage.setItem(key, JSON.stringify(data));
+}
+
+// Función para obtener datos del caché
+function getFromCache(key) {
+    const cachedData = localStorage.getItem(key);
+    return cachedData ? JSON.parse(cachedData) : null;
+}
+
+// Función para eliminar datos del caché (opcional)
+function removeFromCache(key) {
+    localStorage.removeItem(key);
+}
+
+// Función para mostrar las películas
+function displayMovies(data) {
+    const movieList = document.querySelector('.swiper-wrapper');
+    const movieItems = data.map(movie => `
+        <div class="swiper-slide movie" data-id="${movie._id}">
+            <img src="${movie.image_url}" alt="${movie.title}">
+            <p class='name'>${movie.title}</p>
+            <p class='genre'>${Array.isArray(movie.genres) ? movie.genres.join(', ') : 'N/A'}</p>
+        </div>
+    `).join('');
+    movieList.innerHTML = movieItems;
+    initSwiper(); // Inicializar Swiper después de actualizar el contenido
+}
+
+// Función para mostrar las películas que vienen
+function displayMoviesComing(data) {
+    const movieList = document.querySelector('.movie-list-comming');
+    const movieItems = data.map(movie => `
+        <div class="movie-comming" data-id="${movie._id}">
+            <img src="${movie.image_url}" alt="${movie.title}">
+            <div>
+                <p class='name-comming'>${movie.title} (${movie.year})</p>
+                <p class='genre-comming'>${Array.isArray(movie.genre) ? movie.genre.join(', ') : 'N/A'}</p>
+            </div>
+        </div>
+    `).join('');
+    movieList.innerHTML = movieItems;
+    initSwiper();
+}
+
+// Función para cargar películas
 function loadMovies() {
     const movieList = document.querySelector('.swiper-wrapper');
     if (!movieList) {
@@ -12,6 +81,13 @@ function loadMovies() {
         return;
     }
     movieList.innerHTML = ''; // Limpiar resultados anteriores
+
+    // Intentar obtener los resultados del caché
+    const cachedMovies = getFromCache('all_movies');
+    if (cachedMovies) {
+        displayMovies(cachedMovies);
+        return;
+    }
 
     fetch('/movies/v1/all')
         .then(response => {
@@ -23,17 +99,8 @@ function loadMovies() {
         .then(data => {
             console.log(data);
             if (Array.isArray(data) && data.length > 0) {
-                const movieItems = data.map(movie => `
-                        <div class="swiper-slide movie" data-id="${movie._id}">
-                            <img src="${movie.image_url}" alt="${movie.title}">
-                            <p class='name'>${movie.title}</p>
-                            <p class='genre'>${Array.isArray(movie.genres) ? movie.genres.join(', ') : 'N/A'}</p>
-                        </div>
-                    `).join('');
-                    
-                movieList.innerHTML = movieItems;
-
-                initSwiper(); // Inicializar Swiper después de actualizar el contenido
+                saveToCache('all_movies', data); // Guardar en caché
+                displayMovies(data);
             } else {
                 movieList.innerHTML = '<p>No se encontraron películas.</p>';
             }
@@ -44,6 +111,7 @@ function loadMovies() {
         });
 }
 
+// Función para cargar películas que vienen
 function loadMoviesComming() {
     const movieList = document.querySelector('.movie-list-comming');
     if (!movieList) {
@@ -51,6 +119,13 @@ function loadMoviesComming() {
         return;
     }
     movieList.innerHTML = ''; // Limpiar resultados anteriores
+
+    // Intentar obtener los resultados del caché
+    const cachedMoviesComing = getFromCache('coming_movies');
+    if (cachedMoviesComing) {
+        displayMoviesComing(cachedMoviesComing);
+        return;
+    }
 
     fetch('/movies/v2/all')
         .then(response => {
@@ -61,18 +136,8 @@ function loadMoviesComming() {
         })
         .then(data => {
             if (Array.isArray(data) && data.length > 0) {
-                const movieItems = data.map(movie => `
-                        <div class="movie-comming" data-id="${movie._id}">
-                            <img src="${movie.image_url}" alt="${movie.title}">
-                            <div>
-                            <p class='name-comming'>${movie.title} (${movie.year})</p>
-                            <p class='genre-comming'>${Array.isArray(movie.genre) ? movie.genre.join(', ') : 'N/A'}</p>
-                            </div>
-                        </div>
-                    `).join('');
-                movieList.innerHTML = movieItems;
-
-                initSwiper();
+                saveToCache('coming_movies', data); // Guardar en caché
+                displayMoviesComing(data);
             } else {
                 movieList.innerHTML = '<p>No se encontraron películas.</p>';
             }
@@ -83,6 +148,7 @@ function loadMoviesComming() {
         });
 }
 
+// Función para inicializar Swiper
 function initSwiper() {
     if (swiper) {
         swiper.destroy();
@@ -107,9 +173,32 @@ function initSwiper() {
     });
 }
 
+function Swiperinit() {
+    if (swiper) {
+        swiper.destroy();
+    }
+    swiper = new Swiper('.mySwiper', {
+        effect: 'coverflow',
+        grabCursor: true,
+        centeredSlides: true,
+        slidesPerView: 'auto',
+        coverflowEffect: {
+            rotate: 0,
+            stretch: 0,
+            depth: 0,
+            modifier: 1,
+            slideShadows: false,
+        },
+        loop: false,
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+    });
+}
+
 // Manejo de clic en las películas
 document.addEventListener('DOMContentLoaded', function () {
-    console.log('DOM fully loaded and parsed');
 
     // Usando delegación de eventos
     document.addEventListener('click', function(event) {
@@ -124,11 +213,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-
-document.getElementById('searchForm').addEventListener('submit', function (event) {
-    event.preventDefault();
-
-    let searchInput = document.getElementById('searchInput').value;
+// Función para realizar la búsqueda
+function performSearch(searchInput) {
     // Convertir a minúsculas y eliminar espacios en blanco al inicio y al final
     searchInput = searchInput.toLowerCase().trim();
     // Eliminar espacios extra entre palabras
@@ -137,14 +223,24 @@ document.getElementById('searchForm').addEventListener('submit', function (event
     searchInput = searchInput.replace(/\b\w/g, l => l.toUpperCase());
 
     const movieList = document.querySelector('.swiper-wrapper');
+    const movieComming = document.querySelector('.comming');
+
     if (!movieList) {
         console.error('Error: No se encontró el elemento .swiper-wrapper');
         return;
     }
     movieList.innerHTML = '';
+    movieComming.innerHTML = ''; // Limpiar resultados anteriores
 
     if (searchInput === '') {
         movieList.innerHTML = '<p>Por favor, ingrese un título de película.</p>';
+        return;
+    }
+
+    // Intentar obtener los resultados del caché
+    const cachedSearchResults = getFromCache(`search_results_${searchInput}`);
+    if (cachedSearchResults) {
+        displaySearchResults(cachedSearchResults);
         return;
     }
 
@@ -159,25 +255,11 @@ document.getElementById('searchForm').addEventListener('submit', function (event
             const [movie, genre] = data; // Desestructurar la respuesta en movie y genre
 
             if (Array.isArray(movie) && movie.length > 0) {
-                const movieItems = movie.map(m => `
-                    <div class="swiper-slide movie" data-id="${m._id}">
-                        <img src="${m.image_url}" alt="${m.title}">
-                        <p>${m.title}</p>
-                        <p>${Array.isArray(m.genres) ? m.genres.join(', ') : m.genres}</p>
-                    </div>`
-                ).join('');
-                movieList.innerHTML = movieItems;
-
-                initSwiper(); // Inicializar Swiper después de cargar las películas
+                saveToCache(`search_results_${searchInput}`, movie); // Guardar en caché
+                displaySearchResults(movie);
             } else if (Array.isArray(genre) && genre.length > 0) {
-                const movieItems = genre.map(m => `
-                    <div class="swiper-slide movie" data-id="${m._id}">
-                        <img src="${m.image_url}" alt="${m.title}">
-                        <p>${m.title}</p>
-                        <p>${Array.isArray(m.genres) ? m.genres.join(', ') : m.genres}</p>
-                    </div>`
-                ).join('');
-                movieList.innerHTML = movieItems;
+                saveToCache(`search_results_${searchInput}`, genre); // Guardar en caché
+                displaySearchResults(genre);
             } else {
                 movieList.innerHTML = '<p>No se encontraron películas.</p>';
             }
@@ -186,4 +268,46 @@ document.getElementById('searchForm').addEventListener('submit', function (event
             console.error('Error fetching movie:', error);
             movieList.innerHTML = '<p>Error al obtener la película.</p>';
         });
+}
+
+function displaySearchResults(data) {
+    const movieList = document.querySelector('.swiper-wrapper');
+    const movieItems = data.map(m => `
+        <div class="swiper-slide movie" data-id="${m._id}">
+            <img src="${m.image_url}" alt="${m.title}">
+            <p>${m.title}</p>
+            <p>${Array.isArray(m.genres) ? m.genres.join(', ') : m.genres}</p>
+        </div>`
+    ).join('');
+    movieList.innerHTML = movieItems;
+    Swiperinit(); // Inicializar Swiper después de cargar las películas
+}
+
+// Evento de búsqueda en tiempo real
+document.getElementById('searchInput').addEventListener('input', function () {
+    performSearch(this.value);
 });
+
+// Evento de búsqueda al presionar Enter
+document.getElementById('searchForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    let searchInput = document.getElementById('searchInput').value;
+    performSearch(searchInput);
+    document.getElementById('searchInput').blur();
+});
+
+
+
+// Evento de búsqueda en tiempo real
+document.getElementById('searchInput').addEventListener('input', function () {
+    performSearch(this.value);
+});
+
+// Evento de búsqueda al presionar Enter
+document.getElementById('searchForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    let searchInput = document.getElementById('searchInput').value;
+    performSearch(searchInput);
+    document.getElementById('searchInput').blur();
+});
+

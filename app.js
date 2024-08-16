@@ -1,33 +1,40 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const path = require('path');
+require('dotenv').config();
 const appSeats = require('./server/routes/asiento.routes');
 const appMovie = require('./server/routes/movie.routes');
-const appCinemas = require('./server/routes/cinemas.routes')
-const path = require('path'); // Asegúrate de requerir 'path' para manejar rutas de archivos
+const appCinemas = require('./server/routes/cinemas.routes');
+const userRoutes = require('./server/routes/users.routes'); // Importa las rutas de usuarios
+
 const app = express();
 
 // Configura el directorio estático
 app.use(express.static(process.env.EXPRESS_STATIC));
 
+// Middleware para analizar el cuerpo de las solicitudes
+app.use(bodyParser.json());
+
 // Ruta para servir la vista HTML de asientos
-app.get('/seats', function (req, res) {
+app.get('/seats', (req, res) => {
     res.sendFile(path.join(__dirname, process.env.EXPRESS_STATIC, 'views', 'seats.html'));
 });
 app.use('/seats', appSeats);
 
 // Ruta para servir la vista HTML de películas
-app.get('/movies', function (req, res) {
+app.get('/movies', (req, res) => {
     res.sendFile(path.join(__dirname, process.env.EXPRESS_STATIC, 'views', 'movies.html'));
 });
 app.use('/movies', appMovie);
 
-app.get('/movie', function (req, res) {
-    res.sendFile(path.join(__dirname, process.env.EXPRESS_STATIC, 'views', 'movie.html'));
-});
-app.use('/movie', appMovie);
-app.get('/movie', function (req, res) {
+// Ruta para servir la vista HTML de una película específica
+app.get('/movie', (req, res) => {
     res.sendFile(path.join(__dirname, process.env.EXPRESS_STATIC, 'views', 'movie.html'));
 });
 app.use('/movie', appCinemas);
+
+// Usa las rutas de usuarios
+app.use('/users', userRoutes);
 
 // Middleware para manejar errores
 app.use((err, req, res, next) => {
@@ -37,5 +44,5 @@ app.use((err, req, res, next) => {
 
 // Inicia el servidor
 app.listen({ host: process.env.EXPRESS_HOST, port: process.env.EXPRESS_PORT }, () => {
-    console.log(`http://${process.env.EXPRESS_HOST}:${process.env.EXPRESS_PORT}/movies`);
+    console.log(`Servidor corriendo en http://${process.env.EXPRESS_HOST}:${process.env.EXPRESS_PORT}/movies`);
 });
