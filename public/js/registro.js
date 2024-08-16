@@ -1,5 +1,5 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js';
-import { sendEmailVerification, getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js';
+import { sendEmailVerification, getAuth, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAZf19a7Gm_K2uwxapQIpWhaXESO79UyjU",
@@ -17,6 +17,7 @@ const auth = getAuth(app);
 document.getElementById('registro').addEventListener('click', async (e) => {
   e.preventDefault(); // Previene el comportamiento por defecto del formulario
 
+  const nombre = document.getElementById('name').value;
   const email = document.getElementById('emailreg').value;
   const password = document.getElementById('passwordreg').value;
 
@@ -32,7 +33,16 @@ document.getElementById('registro').addEventListener('click', async (e) => {
 
     // Después de enviar el correo de verificación, puedes cerrar la sesión
     await auth.signOut();
-    
+
+    // Envía los datos al backend para registrar al usuario
+    await fetch('/register-user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ nombre, email, password }),
+    });
+
     // Aquí, podrías redirigir al usuario a una página que le indique que debe verificar su correo electrónico
     window.location.href = '/check-email'; // Cambia esta URL según tu configuración
 

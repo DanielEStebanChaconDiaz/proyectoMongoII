@@ -1,115 +1,104 @@
-/* Fuentes */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap');
-
-/* Colores */
-:root {
-  --color-fondo: #0e0e0e;
-  --color-borde: #fcba03;
-  --color-texto: #ffffff;
-  --color-placeholder: #b5b5b5;
-  --color-boton: #fcba03;
-  --color-boton-hover: #d6a002;
-  --color-boton-texto: #0e0e0e;
-  --color-link: #fcba03;
-  --color-link-hover: #d6a002;
-}
-
-/* Estilos generales */
-* {
-  box-sizing: border-box;
+*{
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  font-family: 'Poppins', sans-serif;
-  background-color: var(--color-fondo);
-  color: var(--color-texto);
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  background-color: #111;
+  color: #fff;
+  width: 100%;
+  height: 100vh;
+  padding: 5%;
 }
 
 h2 {
-  font-weight: 600;
-  font-size: 2.5rem;
   text-align: center;
-  margin: 1.5rem 0;
+  font-size: 36px;
+  margin: 30px 0;
+  color: #fff;
 }
 
-a {
-  color: var(--color-link);
-  text-decoration: none;
-  transition: color 0.2s ease-in-out;
-}
-
-a:hover {
-  color: var(--color-link-hover);
-}
-
-/* Estilos del formulario */
 form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  padding: 2rem;
-  border: 2px solid var(--color-borde);
-  border-radius: 1rem;
-  max-width: 35rem;
+  width: 100%;
+  border-radius: 5px;
 }
 
 label {
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
+  display: block;
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #fff;
 }
 
-input[type='text'],
-input[type='password'] {
-  background-color: transparent;
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="password"] {
+  display: block;
+  background: none;
   border: none;
-  border-bottom: 2px solid var(--color-borde);
-  color: var(--color-texto);
-  font-family: 'Roboto', sans-serif;
-  font-size: 1.25rem;
-  padding: 0.5rem;
-  margin-bottom: 1.5rem;
+  border-bottom: 3px red solid;
   width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  color: #ff1100;
 }
 
-input[type='text']:focus,
-input[type='password']:focus {
-  outline: none;
-  border-color: var(--color-boton);
-}
-
-input[type='text']::placeholder,
-input[type='password']::placeholder {
-  color: var(--color-placeholder);
-  font-family: 'Roboto', sans-serif;
-  font-size: 1.25rem;
-}
-
-button[type='submit'] {
-  background-color: var(--color-boton);
+button[type="submit"] {
+  display: block;
+  margin: 20px auto 0;
+  padding: 10px 20px;
+  font-size: 20px;
+  color: #fff;
+  background-color: #F44336;
   border: none;
-  border-radius: 1rem;
-  color: var(--color-boton-texto);
+  border-radius: 5px;
   cursor: pointer;
-  font-family: 'Roboto', sans-serif;
-  font-size: 1.25rem;
-  font-weight: 500;
-  margin-top: 1.5rem;
-  padding: 0.75rem 1.5rem;
-  transition: background-color 0.2s ease-in-out;
 }
 
-button[type='submit']:hover {
-  background-color: var(--color-boton-hover);
+button[type="submit"]:hover {
+  background-color: #ff1100;
 }
 
-/* Estilos para pantallas pequeñas */
-@media screen and (max-width: 600px) {
-  form {
-    max-width: none;
-  }
+a {
+  color: #ff0000;
+}
+
+a:hover {
+  color: #ac0000;
+}
+
+p {
+  margin-top: 20px;
+  font-size: 18px;
+  text-align: center;
+}
+
+#username:focus,
+#email:focus,
+#password:focus,
+#password_confirm:focus {
+  background-color: #fff;
+  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
+}
+
+#username:invalid,
+#email:invalid,
+#password:invalid,
+#password_confirm:invalid {
+  border-color: #F44336;
+}
+
+#username:valid,
+#email:valid,
+#password:valid,
+#password_confirm:valid {
+  border-color: #4CAF50;
+}
+
+#password_confirm {
+  margin-bottom: 40px;
 }

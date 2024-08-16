@@ -6,11 +6,11 @@ const userService = new Users();
 
 // Ruta para manejar el registro de usuarios
 router.post('/', async (req, res) => {
-    const { email, name, age, idNumber, password } = req.body;
+    const { email, name, password } = req.body; // Asegúrate de que los nombres coincidan
 
     try {
-        // Puedes agregar lógica para verificar el email, encriptar la contraseña, etc.
-        await userService.registerUser(email, name, age, idNumber, password);
+        // Llama al servicio de usuarios con los parámetros correctos
+        await userService.registerUser(name, email, password);
         res.status(201).send('Usuario registrado exitosamente.');
     } catch (error) {
         console.error('Error al registrar usuario:', error);

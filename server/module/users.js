@@ -19,29 +19,32 @@ module.exports = class Users {
         return this.db;
     }
 
-    async registerUser(nombre, email, contraseña) {
+    async registerUser(name, email, password) {
         try {
             // Conectar a la base de datos
             const db = await this.connect();
             const usersCollection = db.collection('users');
-
+    
             // Hash de la contraseña
-            const hashedPassword = await bcrypt.hash(contraseña, 10);
-
+            const hashedPassword = await bcrypt.hash(password, 10);
+    
             // Inserta los datos del usuario en la colección 'users'
             const result = await usersCollection.insertOne({
-                nombre: nombre,
+                nombre: name,
                 email: email,
                 contraseña: hashedPassword,
                 createdAt: new Date(),
             });
-
+    
             console.log(`Usuario registrado con ID: ${result.insertedId}`);
             return result;
-
+    
         } catch (err) {
             console.error('Error registering user:', err);
             throw new Error('User registration failed');
         }
     }
+
+    
+    
 };

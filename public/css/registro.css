@@ -1,103 +1,105 @@
-/* Estilos generales */
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+  }
+
 body {
 	font-family: Arial, sans-serif;
 	font-size: 16px;
-	background-color: #F2F2F2;
-	color: #333;
-}
-
-h2 {
+	background-color: #111;
+	color: #fff;
+	width: 100%;
+	height: 100vh;
+	padding: 5%;
+  }
+  
+  h2 {
 	text-align: center;
 	font-size: 36px;
 	margin: 30px 0;
-	color: #444;
-}
-
-form {
-	max-width: 500px;
-	margin: 0 auto;
-	background-color: #fff;
-	padding: 40px;
-	box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+	color: #fff;
+  }
+  
+  form {
+	width: 100%;
 	border-radius: 5px;
-}
-
-label {
+  }
+  
+  label {
 	display: block;
 	font-size: 18px;
 	margin-bottom: 10px;
-	color: #444;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="password"] {
+	color: #fff;
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  input[type="password"] {
 	display: block;
+	background: none;
+	border: none;
+	border-bottom: 3px red solid;
 	width: 100%;
 	padding: 10px;
 	font-size: 16px;
-	border: none;
-	border-radius: 5px;
-	background-color: #F2F2F2;
-	margin-bottom: 20px;
-	box-shadow: inset 0px 0px 3px rgba(0, 0, 0, 0.1);
-	color: #333;
-}
-
-button[type="submit"] {
+	color: #ff1100;
+  }
+  
+  button[type="submit"] {
 	display: block;
 	margin: 20px auto 0;
 	padding: 10px 20px;
 	font-size: 20px;
 	color: #fff;
-	background-color: #FFC107;
+	background-color: #F44336;
 	border: none;
 	border-radius: 5px;
-	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
 	cursor: pointer;
-}
-
-button[type="submit"]:hover {
-	background-color: #F57F17;
-}
-
-a {
-	color: #333;
-}
-
-a:hover {
-	color: #444;
-}
-
-p {
+  }
+  
+  button[type="submit"]:hover {
+	background-color: #ff1100;
+  }
+  
+  a {
+	color: #ff0000;
+  }
+  
+  a:hover {
+	color: #ac0000;
+  }
+  
+  p {
 	margin-top: 20px;
 	font-size: 18px;
 	text-align: center;
-}
-
-/* Estilos específicos del formulario de registro */
-#username:focus,
-#email:focus,
-#password:focus,
-#password_confirm:focus {
+  }
+  
+  #username:focus,
+  #email:focus,
+  #password:focus,
+  #password_confirm:focus {
 	background-color: #fff;
 	box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
-}
-
-#username:invalid,
-#email:invalid,
-#password:invalid,
-#password_confirm:invalid {
+  }
+  
+  #username:invalid,
+  #email:invalid,
+  #password:invalid,
+  #password_confirm:invalid {
 	border-color: #F44336;
-}
-
-#username:valid,
-#email:valid,
-#password:valid,
-#password_confirm:valid {
+  }
+  
+  #username:valid,
+  #email:valid,
+  #password:valid,
+  #password_confirm:valid {
 	border-color: #4CAF50;
-}
-
-#password_confirm {
+  }
+  
+  #password_confirm {
 	margin-bottom: 40px;
-}
+  }
+  
