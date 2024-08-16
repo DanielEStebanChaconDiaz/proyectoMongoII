@@ -1,8 +1,5 @@
-import { initializeApp } from 'www.gstatic.com/firebasejs/9.0.2/firebase-app.js';
-
-import {sendEmailVerification, getAuth, signInWithPopup, 
-    createUserWithEmailAndPassword, signInWithEmailAndPassword,  
-    onAuthStateChanged} from 'www.gstatic.com/firebasejs/9.0.2/firebase-auth.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js';
+import { sendEmailVerification, getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAZf19a7Gm_K2uwxapQIpWhaXESO79UyjU",
@@ -16,4 +13,56 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-registerVersion.addeventListener('submit', (e) => {})
+
+document.getElementById('registro').addEventListener('click', async (e) => {
+  e.preventDefault(); // Previene el comportamiento por defecto del formulario
+
+  const email = document.getElementById('emailreg').value;
+  const password = document.getElementById('passwordreg').value;
+
+  try {
+    // Crear el usuario en Firebase con el correo y la contraseña
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    alert('Usuario creado');
+    console.log(cred.user);
+
+    // Envía la verificación de correo
+    await sendEmailVerification(auth.currentUser);
+    alert('Te hemos enviado un correo de verificación');
+
+    // Después de enviar el correo de verificación, puedes cerrar la sesión
+    await auth.signOut();
+    
+    // Aquí, podrías redirigir al usuario a una página que le indique que debe verificar su correo electrónico
+    window.location.href = '/check-email'; // Cambia esta URL según tu configuración
+
+  } catch (error) {
+    const errorCode = error.code;
+    if (errorCode === 'auth/email-already-in-use') {
+      alert('El correo ya existe');
+    } else if (errorCode === 'auth/invalid-email') {
+      alert('El correo no es válido');
+    } else if (errorCode === 'auth/weak-password') {
+      alert('La contraseña debe tener al menos 6 caracteres');
+    } else {
+      alert('Error: ' + error.message);
+    }
+  }
+});
+
+// Esta función puede ser usada en una página de verificación de correo electrónico o en un archivo separado
+async function checkEmailVerification() {
+  const user = auth.currentUser;
+
+  if (user) {
+    await user.reload(); // Recarga el usuario para obtener el estado actualizado
+    if (user.emailVerified) {
+      window.location.href = '/movies'; // Redirige si el correo está verificado
+    } else {
+      alert('Por favor, verifica tu correo electrónico.');
+    }
+  }
+}
+
+// Llama a esta función cuando el usuario regrese después de verificar el correo
+window.addEventListener('load', checkEmailVerification);

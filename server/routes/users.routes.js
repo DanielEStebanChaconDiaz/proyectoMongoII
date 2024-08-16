@@ -1,23 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const Users = require('../module/users'); // Asegúrate de que esta ruta sea correcta
+const Users = require('../module/users'); // Asegúrate de que la ruta sea correcta
 
-// Instancia de la clase Users
-const users = new Users();
+const userService = new Users();
 
-// Ruta para registrar un nuevo usuario
-router.post('/register', async (req, res) => {
-    const { idToken, nombre, contraseña } = req.body;
-
-    if (!idToken || !nombre || !contraseña) {
-        return res.status(400).json({ error: 'ID token, nombre, and contraseña are required' });
-    }
+// Ruta para manejar el registro de usuarios
+router.post('/', async (req, res) => {
+    const { email, name, age, idNumber, password } = req.body;
 
     try {
-        const userId = await users.registerUser(idToken, nombre, contraseña);
-        res.status(200).json({ userId });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+        // Puedes agregar lógica para verificar el email, encriptar la contraseña, etc.
+        await userService.registerUser(email, name, age, idNumber, password);
+        res.status(201).send('Usuario registrado exitosamente.');
+    } catch (error) {
+        console.error('Error al registrar usuario:', error);
+        res.status(500).send('Error al registrar usuario.');
     }
 });
 

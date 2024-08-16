@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="../css/registro.css" rel="stylesheet" type="text/css"/>
+    <title>Verifica tu correo</title>
+</head>
+<body>
+    <h2>Verifica tu correo</h2>
+    <p>Te hemos enviado un correo de verificación. Por favor, revisa tu bandeja de entrada.</p>
+    <p>Una vez que hayas verificado tu correo, <a href="/movies" id="checkVerification">haz clic aquí</a> para continuar.</p>
+
+    <script type="module">
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js';
+
+        const auth = getAuth();
+
+        document.getElementById('checkVerification').addEventListener('click', async () => {
+            const user = auth.currentUser;
+
+            if (user) {
+                await user.reload(); // Recarga el usuario para obtener el estado actualizado
+                if (user.emailVerified) {
+                    window.location.href = '/movies'; // Redirige si el correo está verificado
+                } else {
+                    alert('Por favor, verifica tu correo electrónico.');
+                }
+            } else {
+                alert('No se pudo verificar el usuario.');
+            }
+        });
+
+        // Verifica automáticamente el correo al cargar la página
+        window.addEventListener('load', async () => {
+            const user = auth.currentUser;
+
+            if (user) {
+                await user.reload(); // Recarga el usuario para obtener el estado actualizado
+                if (user.emailVerified) {
+                    window.location.href = '/movies'; // Redirige si el correo está verificado
+                }
+            }
+        });
+    </script>
+</body>
+</html>
