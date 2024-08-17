@@ -1,12 +1,43 @@
-document.addEventListener('DOMContentLoaded', function () {
+import { getAuth } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js';
+
+// Configura Firebase y la autenticación
+const auth = getAuth();
+
+// Función para verificar si el usuario está autenticado
+function checkAuthentication() {
+    return new Promise((resolve) => {
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                resolve(true); // Usuario autenticado
+            } else {
+                resolve(false); // Usuario no autenticado
+            }
+        });
+    });
+}
+
+// Redirigir al login si no está autenticado
+async function redirectIfNotAuthenticated() {
+    const isAuthenticated = await checkAuthentication();
+    if (!isAuthenticated) {
+        window.location.href = '/login'; // Redirigir al login
+    }
+}
+
+// Verificar autenticación al cargar el DOM
+document.addEventListener('DOMContentLoaded', async function () {
+    await redirectIfNotAuthenticated();
     loadMovies();
-    loadMoviesComming();    
+    loadMoviesComming();  
 });
+
+
 
 document.addEventListener('DOMContentLoaded', () => {
     // Obtener los elementos de la navegación
     const homeButton = document.querySelector('.bottom-nav .nav-item:nth-child(1)');
     const browseButton = document.querySelector('.bottom-nav .nav-item:nth-child(2)');
+    const accountButton = document.querySelector('.bottom-nav .nav-item:nth-child(4)');
     const searchInput = document.getElementById('searchInput');
 
     // Función para redirigir al /movies
@@ -19,9 +50,15 @@ document.addEventListener('DOMContentLoaded', () => {
         searchInput.focus();
     }
 
+    function redirectAccound(){
+        window.location.href = '/accound';
+    }
+
     // Agregar eventos de clic
     homeButton.addEventListener('click', redirectToMovies);
     browseButton.addEventListener('click', focusSearchInput);
+    accountButton.addEventListener('click', redirectAccound);
+    
 });
 
 

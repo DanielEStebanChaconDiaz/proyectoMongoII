@@ -47,6 +47,10 @@ app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, process.env.EXPRESS_STATIC, 'views', 'login.html'));
 })
 
+app.get('/accound', (req, res) => {
+    res.sendFile(path.join(__dirname, process.env.EXPRESS_STATIC, 'views', 'acound.html'));
+})
+
 // Middleware para manejar errores
 app.use((err, req, res, next) => {
     console.error(err.stack);
