@@ -7,11 +7,22 @@
 body {
   font-family: Arial, sans-serif;
   font-size: 16px;
-  background-color: #111;
+  background-image: url(https://i.blogs.es/c76165/carteles-cine-terror/1366_2000.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
   color: #fff;
   width: 100%;
   height: 100vh;
   padding: 5%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.container{
+  background: #111;
+  border-radius: 25px;
+  padding: 5%;
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.3);
 }
 
 h2 {

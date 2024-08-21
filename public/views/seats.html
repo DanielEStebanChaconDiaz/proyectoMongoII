@@ -1,61 +1,103 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Choose Seat</title>
-    <link rel="stylesheet" href="../css/asiento.css">
+    <link rel="stylesheet" href="../../css/asiento.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script type="module" src="../../js/showtimes.js"></script>
 </head>
-<body class="dark">
-    <div class="container">
-        <h1 class="title">Choose Seat</h1>
-        <div class="screen-indicator">Screen This Way</div>
-        <div class="seat-grid">
-                <div class="row-label">
-                    <p>A</p>
-                    <p>B</p>
-                    <p>C</p>
-                    <p>D</p>
-                </div>
-
-            <div class="seats">
-            <div class="seat unavailable"></div>
-            <div class="seat unavailable"></div>
-            <div class="seat unavailable"></div>
-            <div class="seat unavailable"></div>
-            <div class="seat unavailable"></div>
-            <div class="seat unavailable"></div>
-            <div class="seat unavailable"></div>
-            <div class="seat selected">5</div>
-            <div class="seat unavailable"></div>
-            <div class="seat unavailable"></div>
-            <div class="seat available"></div>
-            <div class="seat available"></div>
-            <div class="seat available"></div>
-            <div class="seat available"></div>
-            <div class="seat available"></div>
-            <div class="seat available"></div>
-            <div class="seat available"></div>
-            <div class="seat available"></div>
-            <div class="seat available"></div>
-            <div class="seat available"></div>
-            </div>
-        </div>
-        <div class="date-selector">
-            <button class="date-button selected">Fri 17</button>
-            <button class="date-button">Sat 18</button>
-            <button class="date-button">Sun 19</button>
-            <button class="date-button">Mon 20</button>
-            <button class="date-button">Tue 21</button>
-        </div>
-        <div class="time-selector">
-            <button class="time-button selected">13:00 $5.25 3D</button>
-            <button class="time-button">15:45 $5.99 3D</button>
-            <button class="time-button">18:50 $4.50 3D</button>
-            <button class="time-button">20:30 $6.25 3D</button>
-        </div>
-        <div class="price">Price $24,99</div>
-        <button class="buy-button">Buy ticket</button>
+<body>
+  <header class="header">
+    <i class='bx bx-chevron-left' id="atras"></i>
+    <h1>Choose Seat</h1>
+    <i class='bx bx-dots-vertical-rounded' ></i>
+</header>
+  <div class="container">
+    <div class="screen">
+      <img src="https://i.ibb.co/JKD21gk/image.png" alt="">
+      <p>Screen This Way</p>
     </div>
+    <div class="row">
+      
+    </div>
+    <div class="row">
+      
+    </div>
+    <div class="row">
+      
+    </div>
+    <div class="row">
+      
+    </div>
+    <div class="row">
+      
+    </div>
+  </div>
+  <div class="movie-container">
+    <ul class="showcase">
+      <li>
+        <div class="available"></div>
+        <small>Available</small>
+      </li>
+      <li>
+        <div class="reserved">
+        </div>
+        <small>Reserved</small>
+      </li>
+      <li>
+        <div class="selected"></div>
+        <small>Selected</small>
+      </li>
+    </ul>
+  </div>
+  <div class="week">
+    <label for="d1" class="dates-item">
+      <div class="day">Mon</div>
+      <div class="date">19</div>
+    </label>
+    <label for="d2" class="dates-item">
+      <div class="day">Tue</div>
+      <div class="date">20</div>
+    </label>
+    <label for="d3" class="dates-item">
+      <div class="day">Wed</div>
+      <div class="date">21</div>
+    </label>
+    <label for="d3" class="dates-item">
+      <div class="day">Wed</div>
+      <div class="date">21</div>
+    </label>
+    <label for="d3" class="dates-item">
+      <div class="day">Wed</div>
+      <div class="date">21</div>
+    </label>
+    <label for="d3" class="dates-item">
+      <div class="day">Wed</div>
+      <div class="date">21</div>
+    </label>
+  </div>
+  <div class="time">
+    <label for="t1" class="time-item">
+      <div class="hour">17:00</div>
+      <div class="type">$100 3D</div>
+    </label>
+    <label for="t2" class="time-item">
+      <div class="hour">18:00</div>
+      <div class="type">$100 3D</div>
+    </label>
+    <label for="t3" class="time-item">
+      <div class="hour">19:00</div>
+      <div class="type">$100 3D</div>
+    </label>
+    <label for="t4" class="time-item">
+      <div class="hour">20:00</div>
+      <div class="type">$100 3D</div>
+    </label>
+  </div>
+  <div class="buy">
+    <p class="text">Price $<span id="total">0</span></p>
+    <button class="buy-button">Buy ticket</button>
+  </div>
 </body>
 </html>
