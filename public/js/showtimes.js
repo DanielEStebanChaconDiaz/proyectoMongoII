@@ -9,6 +9,83 @@ document.addEventListener('DOMContentLoaded', function () {
         console.warn('Movie ID or Cinema ID not found in URL');
     }
 
+    function generateSeats(seats) {
+        const rows = document.querySelectorAll('.row');
+        const totalPriceElement = document.getElementById('total'); // Elemento para mostrar el precio total
+        
+
+        // Limpiar filas existentes
+        rows.forEach(row => row.innerHTML = '');
+
+        const container = document.querySelectorAll('.screen');
+        
+
+        // Crear un objeto para almacenar los asientos por fila
+        const seatsByRow = {};
+        seats.forEach(seat => {
+            const rowLetter = seat.seat_row.charAt(0).toUpperCase();
+            if (!seatsByRow[rowLetter]) {
+                seatsByRow[rowLetter] = [];
+            }
+            seatsByRow[rowLetter].push(seat);
+        });
+
+        // Recorremos cada fila para asignar números a los asientos
+        rows.forEach((row, rowIndex) => {
+            const rowLetter = String.fromCharCode('A'.charCodeAt(0) + rowIndex);
+            const seatsInRow = seatsByRow[rowLetter] || [];
+
+            // Limitar solo la primera fila a 5 asientos
+            let seatsToDisplay = rowIndex === 0 ? seatsInRow.slice(0, 5) : seatsInRow;
+
+            // Agregar una letra al inicio de la fila
+            const rowLetterDiv = document.createElement('div');
+            rowLetterDiv.textContent = rowLetter;
+            rowLetterDiv.classList.add('row-letter'); // Opcional, para dar estilo a la letra
+            rowLetterDiv.style.fontWeight = 'bold'; // Opcional, para resaltar la letra
+            row.appendChild(rowLetterDiv);
+
+            // Recorremos todos los asientos para esa fila
+            seatsToDisplay.forEach((seat, seatIndex) => {
+                // ... (resto del código sigue igual)
+                const seatDiv = document.createElement('div');
+                seatDiv.dataset.seatNumber = seatIndex + 1; // Añadimos el número del asiento como data-atributo
+
+                // Configura la clase del asiento según el estado del asiento
+                if (seat.estado === 'disponible') {
+                    seatDiv.classList.add('seat-available');
+                } else {
+                    seatDiv.classList.add('seat-unavailable');
+                }
+
+                // Crear un div para el número del asiento, inicialmente oculto
+                const seatNumberDiv = document.createElement('div');
+                seatNumberDiv.classList.add('seat-number');
+                seatNumberDiv.textContent = seatIndex + 1;
+                seatNumberDiv.style.display = 'none';
+                // Añadir el div del número al asiento
+                seatDiv.appendChild(seatNumberDiv);
+
+                seatDiv.addEventListener('click', () => {
+                    if (seatDiv.classList.contains('seat-available')) {
+                        seatDiv.classList.replace('seat-available', 'seat-selected');
+                        seatDiv.style.backgroundColor = 'red'; // Cambia el color a rojo
+                        seatNumberDiv.style.display = 'block'; // Mostrar el número
+                        totalPrice += 8500; // Agregar el precio del asiento al total
+                    } else if (seatDiv.classList.contains('seat-selected')) {
+                        seatDiv.classList.replace('seat-selected', 'seat-available');
+                        seatDiv.style.backgroundColor = ''; // Restaura el color
+                        seatNumberDiv.style.display = 'none'; // Ocultar el número
+                        totalPrice -= 8500; // Restar el precio del asiento del total
+                    }
+                    totalPriceElement.textContent = totalPrice.toLocaleString('es-ES', { minimumFractionDigits: 2 }); // Actualizar el precio total con punto como separador de miles
+                });
+
+                row.appendChild(seatDiv);
+            });
+        });
+    }
+
     function loadShowtime(movieId, cinemaId) {
         fetch(`/seats/v2?movie_id=${movieId}`, {
             method: 'GET',
@@ -74,6 +151,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     const weekContainer = document.querySelector('.week');
                     const timeContainer = document.querySelector('.time');
+                    const screen = document.querySelector('.screen');
+                    const movie = document.querySelector('.movie-container')
+                    screen.style.display = 'none'; // Ocultar el número inicialmente
+                    movie.style.display = 'none'; // Mostrar el número inicialmente
+
 
                     if (weekContainer && timeContainer) {
                         weekContainer.innerHTML = fechasHTML;
@@ -92,6 +174,10 @@ document.addEventListener('DOMContentLoaded', function () {
                                     document.querySelectorAll('.time-container').forEach(container => {
                                         container.style.display = 'none';
                                     });
+                                    screen.style.display = 'none';
+                                    movie.style.display = 'none';
+                                    selectedTime.classList.replace('time-item-selected', 'time-item');
+                                    generateSeats()
                                 } else {
                                     selectedDate.classList.replace('dates-item-select', 'dates-item');
                                     dateItem.classList.replace('dates-item', 'dates-item-select');
@@ -124,8 +210,15 @@ document.addEventListener('DOMContentLoaded', function () {
                                 if (selectedTime === timeItem) {
                                     selectedTime.classList.replace('time-item-selected', 'time-item');
                                     selectedTime = null;
+                                    totalPrice = 0
+                                    const totalPriceElement = document.getElementById('total'); // Resetear el precio a 0
+                                    totalPriceElement.textContent = totalPrice.toLocaleString('es-ES', { minimumFractionDigits: 2 }); // Actualizar el precio total en la UI
+                                    console.log(totalPrice)
+                                    screen.style.display = 'none';
+                                    movie.style.display = 'none';
+
                                     // Limpiar asientos si se deselecciona el horario
-                                    generateSeats([]);
+                                    generateSeats();
                                 } else {
                                     selectedTime.classList.replace('time-item-selected', 'time-item');
                                     timeItem.classList.replace('time-item', 'time-item-selected');
@@ -135,6 +228,8 @@ document.addEventListener('DOMContentLoaded', function () {
                                 timeItem.classList.replace('time-item', 'time-item-selected');
                                 selectedTime = timeItem;
                             }
+                            screen.style.display = 'flex';
+                            movie.style.display = 'flex';
 
                             // Generar los divs de los asientos
                             generateSeats(seats);
@@ -152,71 +247,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let totalPrice = 0; // Variable para almacenar el precio total
 
-    function generateSeats(seats) {
-        const rows = document.querySelectorAll('.row');
-        const totalPriceElement = document.getElementById('total'); // Elemento para mostrar el precio total
-      
-        // Limpiar filas existentes
-        rows.forEach(row => row.innerHTML = '');
-      
-        // Crear un objeto para almacenar los asientos por fila
-        const seatsByRow = {};
-        seats.forEach(seat => {
-          const rowLetter = seat.seat_row.charAt(0).toUpperCase();
-          if (!seatsByRow[rowLetter]) {
-            seatsByRow[rowLetter] = [];
-          }
-          seatsByRow[rowLetter].push(seat);
-        });
-      
-        // Recorremos cada fila para asignar números a los asientos
-        rows.forEach((row, rowIndex) => {
-          const rowLetter = String.fromCharCode('A'.charCodeAt(0) + rowIndex);
-          const seatsInRow = seatsByRow[rowLetter] || [];
-      
-          // Limitar solo la primera fila a 5 asientos
-          let seatsToDisplay = rowIndex === 0 ? seatsInRow.slice(0, 5) : seatsInRow;
-      
-          // Recorremos todos los asientos para esa fila
-          seatsToDisplay.forEach((seat, seatIndex) => {
-            const seatDiv = document.createElement('div');
-            seatDiv.dataset.seatNumber = seatIndex + 1; // Añadimos el número del asiento como data-atributo
-      
-            // Configura la clase del asiento según el estado del asiento
-            if (seat.estado === 'disponible') {
-              seatDiv.classList.add('seat-available');
-            } else {
-              seatDiv.classList.add('seat-unavailable');
-            }
-      
-            // Crear un div para el número del asiento, inicialmente oculto
-            const seatNumberDiv = document.createElement('div');
-            seatNumberDiv.classList.add('seat-number');
-            seatNumberDiv.textContent = seatIndex + 1;
-            seatNumberDiv.style.display = 'none'; // Ocultar el número inicialmente
-      
-            // Añadir el div del número al asiento
-            seatDiv.appendChild(seatNumberDiv);
-      
-            seatDiv.addEventListener('click', () => {
-              if (seatDiv.classList.contains('seat-available')) {
-                seatDiv.classList.replace('seat-available', 'seat-selected');
-                seatDiv.style.backgroundColor = 'red'; // Cambia el color a rojo
-                seatNumberDiv.style.display = 'block'; // Mostrar el número
-                totalPrice += 8500; // Agregar el precio del asiento al total
-              } else if (seatDiv.classList.contains('seat-selected')) {
-                seatDiv.classList.replace('seat-selected', 'seat-available');
-                seatDiv.style.backgroundColor = ''; // Restaura el color
-                seatNumberDiv.style.display = 'none'; // Ocultar el número
-                totalPrice -= 8500; // Restar el precio del asiento del total
-              }
-              totalPriceElement.textContent = totalPrice.toLocaleString('es-ES', { minimumFractionDigits: 2 }); // Actualizar el precio total con punto como separador de miles
-            });
-      
-            row.appendChild(seatDiv);
-          });
-        });
-      }
+
     const backButton = document.getElementById('atras');
     if (backButton) {
         backButton.addEventListener('click', function () {
