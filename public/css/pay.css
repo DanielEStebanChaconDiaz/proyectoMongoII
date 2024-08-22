@@ -3,10 +3,22 @@
     padding: 0;
     box-sizing: border-box;
 }
-.container-header{
-    background: #272727;
-
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #121212;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    height: 100vh;
+    width: 100%;
 }
+.container-header {
+    background: linear-gradient(135deg, #272727 100%, #ffffff 100%);
+    clip-path: polygon(50% 100% 100%, 0% 100%);
+    height: 35vh;
+  }
+  
 .header {
     display: flex;
     justify-content: space-between;
@@ -26,17 +38,138 @@
 .first-card{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    justify-items: center;
-    align-items: center;
     padding: 2%;
+}
+.movie-img{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .first-card img{
-    width: 10rem;
-    height: 15rem;
+
+    width: 8rem;
     object-fit: contain;
-    border-radius: 15px;
+    border-radius: 10px;
+}
+.text{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.genre{
+    margin-bottom: 4rem;
 }
 .title{
     color: red;
+    font-size: 1rem;
+}
+.cine-name{
+    font-size: 1rem;
+}
+.genre, .date{
+    font-size: .8rem;
+    color: #ffffff80;
+}
+.second-card{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    padding: 5%;
+}
+.order{
+    width: 100%;
+    display: flex;
+    font-size: .8rem;
+    margin-bottom: .5rem;
+}
+.textOrder{
+    display: flex;
+    margin-right: 1rem;
+    color: #ffffff80;
+
+}
+.orderDate{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-bottom: 2rem;
+
+}
+.orderDate1{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 2%;
+    color: #ffffff80;
+    border-bottom: 2px #ffffff80 solid;
+}
+.payment{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2rem;
+}
+.creditCard{
+    width: 100%;
+    display: flex;
+    padding: 2%;
+    color: #ffffff80;
+    justify-content: space-around;
+    align-items: center;
+    background: #ffffff35;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+.nameCard{
+    color: #fff;
+}
+.creditCard img{
+    width: 4rem;
+    height: 4rem;
+    object-fit: contain;
+}
+.select{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 100%;
+    padding: .8px;
+    border: 2px red solid;
+    padding: .8%;
+
+}
+.select button{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: none;
+    border: none;
+}
+.select button:hover{
+    background: red;
+}
+.contador{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    background: #381818;
+    padding: 4%;
+    border-radius: 10px;
+    margin-bottom: 50px;
+}
+.timer{
+    color: red;
+}
+.comprar{
+    border: none;
+    background-color: red;
+    color: #ffffff;
+    height: 53px;
+    border-radius: 10px;
 }
