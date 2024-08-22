@@ -2,11 +2,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 require('dotenv').config();
+
 const appSeats = require('./server/routes/asiento.routes');
 const appMovie = require('./server/routes/movie.routes');
 const appCinemas = require('./server/routes/cinemas.routes');
 const appUsers = require('./server/routes/users.routes'); // Importa las rutas de usuarios
 const appShowtime = require('./server/routes/showtime.routes');
+const { error } = require('console');
 
 const app = express();
 
@@ -56,8 +58,11 @@ app.get('/seats/:movie_id/:cinema_id', (req, res) => {
     res.sendFile(`${process.env.EXPRESS_STATIC}/views/seats.html`, { root: __dirname });
 })
 app.use('/seats', appShowtime);
-
 // Middleware para manejar errores
+
+
+
+
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Algo salió mal!');

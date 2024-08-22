@@ -12,13 +12,12 @@ document.addEventListener('DOMContentLoaded', function () {
     function generateSeats(seats) {
         const rows = document.querySelectorAll('.row');
         const totalPriceElement = document.getElementById('total'); // Elemento para mostrar el precio total
-        
+
 
         // Limpiar filas existentes
         rows.forEach(row => row.innerHTML = '');
 
-        const container = document.querySelectorAll('.screen');
-        
+
 
         // Crear un objeto para almacenar los asientos por fila
         const seatsByRow = {};
@@ -69,12 +68,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 seatDiv.addEventListener('click', () => {
                     if (seatDiv.classList.contains('seat-available')) {
                         seatDiv.classList.replace('seat-available', 'seat-selected');
-                        seatDiv.style.backgroundColor = 'red'; // Cambia el color a rojo
                         seatNumberDiv.style.display = 'block'; // Mostrar el número
                         totalPrice += 8500; // Agregar el precio del asiento al total
                     } else if (seatDiv.classList.contains('seat-selected')) {
                         seatDiv.classList.replace('seat-selected', 'seat-available');
-                        seatDiv.style.backgroundColor = ''; // Restaura el color
                         seatNumberDiv.style.display = 'none'; // Ocultar el número
                         totalPrice -= 8500; // Restar el precio del asiento del total
                     }
@@ -178,6 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                     movie.style.display = 'none';
                                     selectedTime.classList.replace('time-item-selected', 'time-item');
                                     generateSeats()
+                                    
                                 } else {
                                     selectedDate.classList.replace('dates-item-select', 'dates-item');
                                     dateItem.classList.replace('dates-item', 'dates-item-select');
@@ -200,13 +198,16 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
                         });
                     });
+                    document.querySelectorAll('.dates-item')[0].click();
 
                     let selectedTime = null;
                     document.querySelectorAll('.time-item').forEach(timeItem => {
                         timeItem.addEventListener('click', () => {
                             const seats = JSON.parse(timeItem.dataset.seats);
+                            
 
                             if (selectedTime) {
+                                
                                 if (selectedTime === timeItem) {
                                     selectedTime.classList.replace('time-item-selected', 'time-item');
                                     selectedTime = null;
@@ -223,18 +224,27 @@ document.addEventListener('DOMContentLoaded', function () {
                                     selectedTime.classList.replace('time-item-selected', 'time-item');
                                     timeItem.classList.replace('time-item', 'time-item-selected');
                                     selectedTime = timeItem;
+                                    const totalPriceElement = document.getElementById('total'); // Resetear el precio a 0
+                                    totalPriceElement.textContent = totalPrice.toLocaleString('es-ES', { minimumFractionDigits: 2 }); // Actualizar el precio total en la UI
+                                    console.log(totalPrice)
                                 }
                             } else {
                                 timeItem.classList.replace('time-item', 'time-item-selected');
                                 selectedTime = timeItem;
+                                const totalPriceElement = document.getElementById('total'); // Resetear el precio a 0
+                                totalPriceElement.textContent = totalPrice.toLocaleString('es-ES', { minimumFractionDigits: 2 }); // Actualizar el precio total en la UI
+                                console.log(totalPrice)
                             }
                             screen.style.display = 'flex';
                             movie.style.display = 'flex';
-
-                            // Generar los divs de los asientos
                             generateSeats(seats);
+                            const totalPriceElement = document.getElementById('total'); // Resetear el precio a 0
+                            totalPriceElement.textContent = totalPrice.toLocaleString('es-ES', { minimumFractionDigits: 2 }); // Actualizar el precio total en la UI
+                            console.log(totalPrice)
+                            // Generar los divs de los asientos
                         });
                     });
+                    document.querySelectorAll('.time-item')[0].click();
 
                 } else {
                     console.warn('No se encontraron datos válidos.');

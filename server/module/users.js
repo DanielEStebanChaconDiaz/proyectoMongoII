@@ -19,30 +19,54 @@ module.exports = class Users {
         return this.db;
     }
 
-    async registerUser(nombre, email, password) {
+    async registerUser(nombre, email, password, imageName) {
         try {
-            // Conectar a la base de datos
-            const db = await this.connect();
-            const usersCollection = db.collection('users');
-    
-            // Hash de la contraseña
-            const hashedPassword = await bcrypt.hash(password, 10);
-    
-            // Inserta los datos del usuario en la colección 'users'
-            const result = await usersCollection.insertOne({
-                nombre: nombre,
-                email: email,
-                contraseña: hashedPassword,
-                createdAt: new Date(),
-            });
-    
-            console.log(`Usuario registrado con ID: ${result.insertedId}`);
-            return result;
-    
+          // Conectar a la base de datos
+          const db = await this.connect();
+          const usersCollection = db.collection('users');
+      
+          // Hash de la contraseña
+          const hashedPassword = await bcrypt.hash(password, 10);
+      
+          // Inserta los datos del usuario en la colección 'users'
+          const result = await usersCollection.insertOne({
+            nombre: nombre,
+            email: email,
+            contraseña: hashedPassword,
+            imagePath: imageName, // Guarda la ruta de la imagen
+            createdAt: new Date(),
+          });
+      
+          console.log(`Usuario registrado con ID: ${result.insertedId}`);
+          return result;
         } catch (err) {
-            console.error('Error registering user:', err);
-            throw new Error('User registration failed');
+          console.error('Error registering user:', err);
+          throw new Error('User registration failed');
         }
+      }
+    async updateImg(email, imageName) {
+      try {
+        // Conectar a la base de datos
+        const db = await this.connect();
+        const usersCollection = db.collection('users');
+        
+        // Actualiza los datos del usuario en la colección 'users'
+        const result = await usersCollection.updateOne(
+            { email: email },
+            {
+                $set: {
+                    imagePath: imageName,
+                }
+            }
+        );
+        
+        console.log(`Imagen actualizada para el usuario con email: ${email}`);
+        return result;
+        
+      } catch (err) {
+        console.error('Error al actualizar la imagen:', err);
+        throw err; // Propaga el error para que pueda ser manejado adecuadamente en otros lugares
+      }
     }
     
     async getUsersFroEmail(email) {

@@ -348,3 +348,7 @@ document.getElementById('searchForm').addEventListener('submit', function (event
     document.getElementById('searchInput').blur();
 });
 
+document.getElementById('profile').addEventListener('click', function (event) {
+    window.location.href = '/accound';
+});
+

@@ -17,13 +17,18 @@ const auth = getAuth(app);
 document.getElementById('registro').addEventListener('click', async (e) => {
   e.preventDefault(); // Previene el comportamiento por defecto del formulario
 
-  const nombre = document.getElementById('name').value;
+  const nombre = document.getElementById('nombre').value;
   const email = document.getElementById('emailreg').value;
   const password = document.getElementById('passwordreg').value;
+  const formData = new FormData();
+  formData.append('password', password);
+  formData.append('email', email);
+  formData.append('nombre', nombre);
+  formData.append('image', document.getElementById('image').files[0]);
 
   try {
     // Crear el usuario en Firebase con el correo y la contraseña
-    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    const cred = await createUserWithEmailAndPassword(auth, email, password, nombre);
     alert('Usuario creado');
     console.log(cred.user);
 
@@ -37,10 +42,7 @@ document.getElementById('registro').addEventListener('click', async (e) => {
     // Envía los datos al backend para registrar al usuario
     await fetch('/register-user', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ nombre, email, password }),
+      body: formData,
     });
 
     // Aquí, podrías redirigir al usuario a una página que le indique que debe verificar su correo electrónico

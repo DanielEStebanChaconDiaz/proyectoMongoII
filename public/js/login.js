@@ -66,3 +66,20 @@ auth.onAuthStateChanged(user => {
         }
     }
 })
+
+// Esta función puede ser usada en una página de verificación de correo electrónico o en un archivo separado
+async function checkEmailVerification() {
+    const user = auth.currentUser;
+  
+    if (user) {
+      await user.reload(); // Recarga el usuario para obtener el estado actualizado
+      if (user.emailVerified) {
+        window.location.href = '/movies'; // Redirige si el correo está verificado
+      } else {
+        alert('Por favor, verifica tu correo electrónico.');
+      }
+    }
+  }
+  
+  // Llama a esta función cuando el usuario regrese después de verificar el correo
+  window.addEventListener('load', checkEmailVerification);
