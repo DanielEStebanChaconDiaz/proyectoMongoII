@@ -31,8 +31,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     loadMoviesComming();  
 });
 
-
-
 document.addEventListener('DOMContentLoaded', () => {
     // Obtener los elementos de la navegación
     const homeButton = document.querySelector('.bottom-nav .nav-item:nth-child(1)');
@@ -61,24 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
 });
 
-
 let swiper; // Variable global para la instancia de Swiper
-
-// Función para guardar datos en caché
-function saveToCache(key, data) {
-    localStorage.setItem(key, JSON.stringify(data));
-}
-
-// Función para obtener datos del caché
-function getFromCache(key) {
-    const cachedData = localStorage.getItem(key);
-    return cachedData ? JSON.parse(cachedData) : null;
-}
-
-// Función para eliminar datos del caché (opcional)
-function removeFromCache(key) {
-    localStorage.removeItem(key);
-}
 
 // Función para mostrar las películas
 function displayMovies(data) {
@@ -119,13 +100,6 @@ function loadMovies() {
     }
     movieList.innerHTML = ''; // Limpiar resultados anteriores
 
-    // Intentar obtener los resultados del caché
-    const cachedMovies = getFromCache('all_movies');
-    if (cachedMovies) {
-        displayMovies(cachedMovies);
-        return;
-    }
-
     fetch('/movies/v1/all')
         .then(response => {
             if (!response.ok) {
@@ -136,7 +110,6 @@ function loadMovies() {
         .then(data => {
             console.log(data);
             if (Array.isArray(data) && data.length > 0) {
-                saveToCache('all_movies', data); // Guardar en caché
                 displayMovies(data);
             } else {
                 movieList.innerHTML = '<p>No se encontraron películas.</p>';
@@ -157,13 +130,6 @@ function loadMoviesComming() {
     }
     movieList.innerHTML = ''; // Limpiar resultados anteriores
 
-    // Intentar obtener los resultados del caché
-    const cachedMoviesComing = getFromCache('coming_movies');
-    if (cachedMoviesComing) {
-        displayMoviesComing(cachedMoviesComing);
-        return;
-    }
-
     fetch('/movies/v2/all')
         .then(response => {
             if (!response.ok) {
@@ -173,7 +139,6 @@ function loadMoviesComming() {
         })
         .then(data => {
             if (Array.isArray(data) && data.length > 0) {
-                saveToCache('coming_movies', data); // Guardar en caché
                 displayMoviesComing(data);
             } else {
                 movieList.innerHTML = '<p>No se encontraron películas.</p>';
@@ -274,13 +239,6 @@ function performSearch(searchInput) {
         return;
     }
 
-    // Intentar obtener los resultados del caché
-    const cachedSearchResults = getFromCache(`search_results_${searchInput}`);
-    if (cachedSearchResults) {
-        displaySearchResults(cachedSearchResults);
-        return;
-    }
-
     fetch(`/movies/v1?title=${encodeURIComponent(searchInput)}`)
         .then(response => {
             if (!response.ok) {
@@ -292,10 +250,8 @@ function performSearch(searchInput) {
             const [movie, genre] = data; // Desestructurar la respuesta en movie y genre
 
             if (Array.isArray(movie) && movie.length > 0) {
-                saveToCache(`search_results_${searchInput}`, movie); // Guardar en caché
                 displaySearchResults(movie);
             } else if (Array.isArray(genre) && genre.length > 0) {
-                saveToCache(`search_results_${searchInput}`, genre); // Guardar en caché
                 displaySearchResults(genre);
             } else {
                 movieList.innerHTML = '<p>No se encontraron películas.</p>';
@@ -322,33 +278,6 @@ function displaySearchResults(data) {
 
 // Evento de búsqueda en tiempo real
 document.getElementById('searchInput').addEventListener('input', function () {
-    performSearch(this.value);
-});
-
-// Evento de búsqueda al presionar Enter
-document.getElementById('searchForm').addEventListener('submit', function (event) {
-    event.preventDefault();
-    let searchInput = document.getElementById('searchInput').value;
+    const searchInput = document.getElementById('searchInput').value;
     performSearch(searchInput);
-    document.getElementById('searchInput').blur();
 });
-
-
-
-// Evento de búsqueda en tiempo real
-document.getElementById('searchInput').addEventListener('input', function () {
-    performSearch(this.value);
-});
-
-// Evento de búsqueda al presionar Enter
-document.getElementById('searchForm').addEventListener('submit', function (event) {
-    event.preventDefault();
-    let searchInput = document.getElementById('searchInput').value;
-    performSearch(searchInput);
-    document.getElementById('searchInput').blur();
-});
-
-document.getElementById('profile').addEventListener('click', function (event) {
-    window.location.href = '/accound';
-});
-
