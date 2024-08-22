@@ -1,4 +1,50 @@
 document.addEventListener('DOMContentLoaded', function () {
+    function exportData() {
+        const movieId = window.location.pathname.split('/')[2];
+        const cinemaId = window.location.pathname.split('/')[3]; // Capturamos el id de la película desde la URL
+        const selectedSeats = document.querySelectorAll('.seat-selected'); // Capturamos los asientos seleccionados
+        const totalSeats = selectedSeats.length; // Contamos cuántos asientos han sido seleccionados
+        const totalPriceElement = document.getElementById('total'); // Elemento para el precio total
+        const totalPrice = parseFloat(totalPriceElement.textContent.replace(/\./g, '').replace(',', '.')); // Convertimos el texto en número
+        let showtimeDate = document.querySelector('.dates-item-select').textContent.match(/\d+/)[0];
+        let showtimeHour = null;
+        const today = new Date();
+                const month = today.toLocaleDateString('es-ES', { month: 'long' });
+                const year = today.getFullYear();
+
+                // Construir la fecha en el formato deseado
+                showtimeDate = `${showtimeDate} de ${month} de ${year}`;
+                const seatDetails = Array.from(selectedSeats).map(seat => {
+                    const rowLetter = seat.closest('.row').querySelector('.row-letter').textContent.trim();
+                    const seatNumber = seat.dataset.seatNumber;
+                    return { rowLetter, seatNumber };
+                });
+        
+        const data = {
+            movieId: movieId,
+            cinemaId: cinemaId,
+            totalSeats: totalSeats,
+            totalPrice: totalPrice,
+            showtimeDate: showtimeDate,
+            showtimeHour: showtimeHour,
+            seat: seatDetails,
+        };
+
+        console.log("Datos exportados:", data);
+        return data;
+    }
+
+    // Ejemplo de uso: exportar datos al hacer clic en un botón
+    const exportButton = document.getElementById('exportar');
+    if (exportButton) {
+        exportButton.addEventListener('click', function () {
+            const exportedData = exportData();
+            // Aquí puedes hacer lo que quieras con los datos exportados, como enviarlos a un servidor o descargarlos como archivo.
+        });
+    } else {
+        console.warn('Advertencia: No se encontró el botón de exportar con el id "exportar".');
+    }
+
     const pathSegments = window.location.pathname.split('/').filter(segment => segment);
     const movieId = pathSegments[1];
     const cinemaId = pathSegments[2];
@@ -49,6 +95,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 // ... (resto del código sigue igual)
                 const seatDiv = document.createElement('div');
                 seatDiv.dataset.seatNumber = seatIndex + 1; // Añadimos el número del asiento como data-atributo
+
+                seatDiv.dataset.seatNumber = seat.seat_number;
+
 
                 // Configura la clase del asiento según el estado del asiento
                 if (seat.estado === 'disponible') {

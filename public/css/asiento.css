@@ -52,7 +52,7 @@ body{
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 50vh;
+  height: 40vh;
 }
 .screen{
   width: 300px;
@@ -175,6 +175,7 @@ body{
   width: 100%;
   gap: 10%;
   overflow: scroll;
+  height: 15vh;
 }
 .dates-item-select{
   display: flex;
@@ -186,8 +187,8 @@ body{
   color: #fff;
   border-radius: 10px;
   font-weight: 700;
-  width: 20%;
-  height: 6rem;
+  width: 18%;
+  height: 7rem;
   padding: 1.5rem;
 }
 ::-webkit-scrollbar{
@@ -205,8 +206,8 @@ body{
   border-radius: 15px;
   font-weight: 900;
   font-size:large;
-  width: 20%;
-  height: 6rem;
+  width: 18%;
+  height: 7rem;
   padding: 1.5rem;
 }
 .time{
@@ -230,6 +231,8 @@ body{
   border-radius: 5px;
   padding: 2%;
   background: #FE0000;
+  width: 25%;
+  height: 4.5rem;
 }
 .time-item{
   display: flex;
@@ -240,6 +243,8 @@ body{
   border-radius: 5px;
   padding: 2%;
   background: #fff;
+  width: 25%;
+  height: 4.5rem;
 }
 .type{
   display: flex;
