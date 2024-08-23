@@ -1,49 +1,82 @@
-document.addEventListener('DOMContentLoaded', function () {
-    function exportData() {
-        const movieId = window.location.pathname.split('/')[2];
-        const cinemaId = window.location.pathname.split('/')[3]; // Capturamos el id de la película desde la URL
-        const selectedSeats = document.querySelectorAll('.seat-selected'); // Capturamos los asientos seleccionados
-        const totalSeats = selectedSeats.length; // Contamos cuántos asientos han sido seleccionados
-        const totalPriceElement = document.getElementById('total'); // Elemento para el precio total
-        const totalPrice = parseFloat(totalPriceElement.textContent.replace(/\./g, '').replace(',', '.')); // Convertimos el texto en número
-        let showtimeDate = document.querySelector('.dates-item-select').textContent.match(/\d+/)[0];
-        let showtimeHour = null;
-        const today = new Date();
-                const month = today.toLocaleDateString('es-ES', { month: 'long' });
-                const year = today.getFullYear();
+export function exportData() {
+    const movieId = window.location.pathname.split('/')[2];
+    const cinemaId = window.location.pathname.split('/')[3];
+    const selectedSeats = document.querySelectorAll('.seat-selected');
+    const totalSeats = selectedSeats.length;
+    const totalPriceElement = document.getElementById('total');
+    const totalPrice = parseFloat(totalPriceElement.textContent.replace(/\./g, '').replace(',', '.'));
 
-                // Construir la fecha en el formato deseado
-                showtimeDate = `${showtimeDate} de ${month} de ${year}`;
-                const seatDetails = Array.from(selectedSeats).map(seat => {
-                    const rowLetter = seat.closest('.row').querySelector('.row-letter').textContent.trim();
-                    const seatNumber = seat.dataset.seatNumber;
-                    return { rowLetter, seatNumber };
-                });
-        
-        const data = {
-            movieId: movieId,
-            cinemaId: cinemaId,
-            totalSeats: totalSeats,
-            totalPrice: totalPrice,
-            showtimeDate: showtimeDate,
-            showtimeHour: showtimeHour,
-            seat: seatDetails,
-        };
+    let showtimeDateElement = document.querySelector('.dates-item-select');
+    let showtimeTimeElement = document.querySelector('.time-item-selected');
+    let showtimeDate = null;
+    let showtimeHour = null
 
-        console.log("Datos exportados:", data);
-        return data;
+    if (showtimeTimeElement) {
+        showtimeHour = showtimeTimeElement.textContent;
+    } else {
+        console.error('Error: El elemento ".time-item-select" no se encontró en el DOM.');
+        return;
     }
 
-    // Ejemplo de uso: exportar datos al hacer clic en un botón
+    if (showtimeDateElement) {
+        showtimeDate = showtimeDateElement.textContent.match(/\d+/)[0];
+    } else {
+        console.error('Error: El elemento ".dates-item-select" no se encontró en el DOM.');
+        return;
+    }
+
+    const today = new Date();
+    const month = today.toLocaleDateString('es-ES', { month: 'long' });
+    const year = today.getFullYear();
+    showtimeDate = `${showtimeDate} de ${month} de ${year}`;
+
+    const seatDetails = Array.from(selectedSeats).map(seat => {
+        const rowLetter = seat.closest('.row').querySelector('.row-letter').textContent.trim();
+        const seatNumber = seat.dataset.seatNumber;
+        return { rowLetter, seatNumber };
+    });
+
+    const data = {
+        movieId: movieId,
+        cinemaId: cinemaId,
+        totalSeats: totalSeats,
+        totalPrice: totalPrice,
+        showtimeDate: showtimeDate,
+        showtimeHour: showtimeHour,  // Si no lo estás calculando aún, déjalo como null
+        seat: seatDetails,
+    };
+
+    // Serializar datos complejos (arrays/objetos) como JSON strings
+    const queryParams = new URLSearchParams({
+        movieId: data.movieId,
+        cinemaId: data.cinemaId,
+        totalSeats: data.totalSeats,
+        totalPrice: data.totalPrice,
+        showtimeDate: data.showtimeDate,
+        showtimeHour: data.showtimeHour,
+        seat: JSON.stringify(data.seat),  // Serializar el array seatDetails como JSON string
+    }).toString();
+
+    console.log("Datos exportados:", data);
+    return queryParams;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    let showtimeTimeElement = document.querySelector('.time-item-selected');
+    console.log(showtimeTimeElement)
     const exportButton = document.getElementById('exportar');
     if (exportButton) {
         exportButton.addEventListener('click', function () {
-            const exportedData = exportData();
-            // Aquí puedes hacer lo que quieras con los datos exportados, como enviarlos a un servidor o descargarlos como archivo.
+            const queryParams = exportData();
+            window.location.href = `/payment?${queryParams}`;
         });
     } else {
         console.warn('Advertencia: No se encontró el botón de exportar con el id "exportar".');
     }
+});
+
+
+document.addEventListener('DOMContentLoaded', function () {
 
     const pathSegments = window.location.pathname.split('/').filter(segment => segment);
     const movieId = pathSegments[1];
@@ -103,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (seat.estado === 'disponible') {
                     seatDiv.classList.add('seat-available');
                 } else {
-                    seatDiv.classList.add('seat-unavailable');
+                    seatDiv.classList.add('seat-reserved');
                 }
 
                 // Crear un div para el número del asiento, inicialmente oculto
@@ -162,10 +195,17 @@ document.addEventListener('DOMContentLoaded', function () {
                             groupedShowtimes[dateKey] = [];
                         }
 
+                        // Obtener las horas y minutos en UTC
+                        let hours = fecha.getUTCHours().toString().padStart(2, '0'); // Formato de 2 dígitos
+    let minutes = fecha.getUTCMinutes().toString().padStart(2, '0'); // Formato de 2 dígitos
+
+                        // Formatear la hora como una cadena de 2 dígitos para horas y minutos
+                        const horaFormateada = `${hours}:${minutes}`;
+                        console.log(horaFormateada);
                         groupedShowtimes[dateKey].push({
-                            hora: fecha.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                            hora: horaFormateada,
                             formato: funcion.format,
-                            seats: funcion.seats // Añadimos los asientos
+                            seats: funcion.seats // Aña
                         });
                     });
 
@@ -224,7 +264,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                     movie.style.display = 'none';
                                     selectedTime.classList.replace('time-item-selected', 'time-item');
                                     generateSeats()
-                                    
+
                                 } else {
                                     selectedDate.classList.replace('dates-item-select', 'dates-item');
                                     dateItem.classList.replace('dates-item', 'dates-item-select');
@@ -253,10 +293,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     document.querySelectorAll('.time-item').forEach(timeItem => {
                         timeItem.addEventListener('click', () => {
                             const seats = JSON.parse(timeItem.dataset.seats);
-                            
+
 
                             if (selectedTime) {
-                                
+
                                 if (selectedTime === timeItem) {
                                     selectedTime.classList.replace('time-item-selected', 'time-item');
                                     selectedTime = null;

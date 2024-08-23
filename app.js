@@ -58,7 +58,12 @@ app.get('/seats/:movie_id/:cinema_id', (req, res) => {
     res.sendFile(`${process.env.EXPRESS_STATIC}/views/seats.html`, { root: __dirname });
 })
 app.use('/seats', appShowtime);
+
 // Middleware para manejar errores
+
+app.get('/payment', (req, res) => {
+    res.sendFile(path.join(__dirname, process.env.EXPRESS_STATIC, 'views', 'pay.html'));
+})
 
 
 
