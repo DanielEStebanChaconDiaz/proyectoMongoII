@@ -8,6 +8,8 @@ const appMovie = require('./server/routes/movie.routes');
 const appCinemas = require('./server/routes/cinemas.routes');
 const appUsers = require('./server/routes/users.routes'); // Importa las rutas de usuarios
 const appShowtime = require('./server/routes/showtime.routes');
+const appTickets = require('./server/routes/tickets.routes')
+const appTicket = require('./server/routes/bougth.routes')
 const { error } = require('console');
 
 const app = express();
@@ -64,7 +66,12 @@ app.use('/seats', appShowtime);
 app.get('/payment', (req, res) => {
     res.sendFile(path.join(__dirname, process.env.EXPRESS_STATIC, 'views', 'pay.html'));
 })
+app.use('/payment', appTickets)
 
+app.get('/paid', (req, res) => {
+    res.sendFile(path.join(__dirname, process.env.EXPRESS_STATIC, 'views', 'ticket.html'));
+})
+app.use('/paid', appTicket)
 
 
 

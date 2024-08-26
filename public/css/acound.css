@@ -31,11 +31,16 @@ body {
     border-radius: 0.5rem;
     overflow: hidden;
 }
-.card img {
+.imagen{
     width: 20rem;
-    object-fit: cover;
     height: 20rem;
     border-radius: 100%;
+}
+.imagen img {
+    width: 20rem !important;
+    height: 20rem !important;
+    border-radius: 100% !important;
+    object-fit: cover;
 }
 .card-content {
     padding: 16px;

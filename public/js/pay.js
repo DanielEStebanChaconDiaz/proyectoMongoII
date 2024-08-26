@@ -1,4 +1,8 @@
 
+
+
+
+
 document.addEventListener('DOMContentLoaded', function () {
     function generateRandomOrderNumber() {
         return Math.floor(100000000 + Math.random() * 900000000);
@@ -218,9 +222,8 @@ comprar.addEventListener('click', function () {
     } else {
         console.warn('Advertencia: No se encontró el botón de retroceso con el id "atras".');
     }
+
 });
-
-
 
 
 
@@ -238,10 +241,10 @@ function startTimer() {
 
         // Actualizar el contenido del temporizador
         timerElement.textContent = `${minutes}:${seconds}`;
-
+        
         // Reducir el tiempo
         time--;
-
+        
         // Cuando el tiempo se acabe
         if (time < 0) {
             clearInterval(interval);
@@ -252,3 +255,168 @@ function startTimer() {
 
 // Iniciar el temporizador
 startTimer();
+
+
+const comprar = document.querySelector('.comprar')
+import { loadUserName } from './name.js';
+
+const CACHE_KEY = 'userData'; // Clave para almacenar los datos del usuario en el almacenamiento local
+
+
+console.log (loadUserName())
+const email = await loadUserName()
+
+const response = await fetch(`/register-user/v1?email=${email}`);
+if (!response.ok) {
+    throw new Error('Network response was not ok');
+}
+
+// Parsear la respuesta JSON y obtener los datos del usuario
+const data = await response.json();
+const nombre = data[0].nombre;
+console.log (nombre)
+comprar.addEventListener('click', () => {
+    
+    
+    
+    function obtenerDetallesCompra() {
+        
+        // Obtener los parámetros de la URL
+        console.log(email);
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // Extraer los valores relevantes de los parámetros de la URL
+        const movieId = urlParams.get('movieId');
+        const cinemaId = urlParams.get('cinemaId');
+        const totalSeats = urlParams.get('totalSeats');
+        const totalPrice = urlParams.get('totalPrice');
+        const showtimeDate = urlParams.get('showtimeDate');
+        const showtimeHour = urlParams.get('showtimeHour');
+        
+        function convertirAFecha(cadenaFecha) {
+            const [dia, mes, ano] = cadenaFecha.split(' de ');
+            const meses = {
+                'enero': 0, 'febrero': 1, 'marzo': 2, 'abril': 3, 'mayo': 4, 'junio': 5,
+                'julio': 6, 'agosto': 7, 'septiembre': 8, 'octubre': 9, 'noviembre': 10, 'diciembre': 11
+            };
+            
+            return new Date(ano, meses[mes.toLowerCase()], parseInt(dia));
+        }
+        
+        function convertirAHora(cadenaHora) {
+            const horaLimpia = cadenaHora.trim();
+            const [horas, minutos] = horaLimpia.split(':');
+            return { horas: parseInt(horas, 10), minutos: parseInt(minutos, 10) };
+        }
+        
+        function crearFechaCompleta(cadenaFecha, cadenaHora) {
+            const fecha = convertirAFecha(cadenaFecha);
+            const { horas, minutos } = convertirAHora(cadenaHora);
+            
+            fecha.setHours(horas);
+            fecha.setMinutes(minutos);
+            fecha.setSeconds(0);
+            fecha.setMilliseconds(0);
+            
+            return fecha;
+        }
+        
+        const fechaCompleta = crearFechaCompleta(showtimeDate, showtimeHour);
+        console.log(fechaCompleta);
+        const dateObject = new Date(fechaCompleta+'z-5');
+
+        // Extraer y mostrar componentes individuales (números)
+        const cadenaFechaHora = dateObject;
+        console.log((new Date(dateObject+'z+0')).toISOString());
+        console.log(dateObject.toLocaleDateString())
+        
+        console.log(cadenaFechaHora);
+        
+        console.log(cadenaFechaHora);
+        
+        // Ejemplo de uso
+        
+        const fechaISO = new Date(dateObject+'z+0').toISOString();
+        console.log(fechaISO);
+        
+        
+        
+        
+        
+        const seatDetails = JSON.parse(urlParams.get('seat')); // Convertir el JSON de los asientos
+        let orderId = setTimeout(function() {
+            orderId += document.querySelector('.number').textContent;
+            // Aquí puedes continuar con la lógica que necesites usar después de obtener el Order ID
+            console.log('Order ID:', orderId);
+        }, 500); // 500 milisegundos (ajusta este valor según lo necesites)
+        // Obtener el ID de la orden
+        
+        // Fetch para obtener los detalles de la película
+        return fetch(`/movies/v3?movieId=${movieId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al obtener los detalles de la película');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const movie = data[0];
+            
+            // Obtener el nombre del cine
+            let cinemaDireccion = 'Dirección del Cine no disponible';
+            const cinemas = movie.cinemas;
+            if (cinemas && Array.isArray(cinemas)) {
+                const cinema = cinemas.find(c => c._id === cinemaId);
+                cinemaDireccion = cinema ? cinema.direccion : cinemaDireccion;
+            }
+            console.log(cinemas)
+            
+            // Extraer los detalles relevantes
+            const movieId = movie._id || 'Título no disponible';
+            const movieImage = movie.image_url || '';
+            const seatsPurchase = seatDetails.map(seat => `${seat.rowLetter}${seat.seatNumber}`).join(', ');
+            
+            // Crear un objeto con todos los detalles relevantes
+            const detallesCompra = {
+                movieId: movieId,
+                cinemaId: cinemaId,
+                seatsPurchase: seatsPurchase,
+                cinemaDireccion: cinemaDireccion,
+                movieImage: movieImage,
+                totalPrice: totalPrice,
+                orderDate: fechaISO,
+                orderId: orderId,
+                userName :nombre
+                
+            };
+            
+            fetch('/payment/facture', {
+                method: 'POST', // Usamos POST
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(detallesCompra) // Serializamos el array como JSON
+            })
+            
+            window.location.href= `/paid?orderId=${orderId}`
+            return detallesCompra; // Devolver el objeto con los detalles
+        })
+        .catch(error => {
+            console.error('Error al obtener los detalles de la compra:', error);
+            return null;
+        });
+        
+    }
+    
+    // Ejemplo de uso
+    obtenerDetallesCompra().then(detalles => {
+        if (detalles) {
+            console.log('Detalles de la compra:', detalles);
+            // Puedes hacer lo que desees con los detalles obtenidos
+        }
+    });
+    
+    
+    
+    
+})

@@ -41,7 +41,7 @@ export async function fetchUserName() {
         // Actualizar el saludo en la página con el nombre y la imagen del usuario
         updateGreeting(name, img);
     } catch (error) {
-        console.error('There was a problem with the fetch operation:', error);
+        console.error('There w  as a problem with the fetch operation:', error);
     }
 }
 

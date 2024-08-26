@@ -138,8 +138,8 @@ function loadMovie(movieId) {
                         <h1 class='cast-title'>Cinemas</h1>
                         <div class="cinemas">
                             ${cinemasHTML}
-                            <button id='playButton' class="button">Book Now</button>
-                        </div>
+                            </div>
+                           <div class='comprar2'> <button id='playButton' class="button">Book Now</button> </div>
                     </div>
                 `;
 

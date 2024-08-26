@@ -118,6 +118,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 25vh;
 }
 .cinemas img{
     width: 3.563rem;
@@ -342,4 +343,10 @@ h1 {
     font-size: 18px;
     width: 100%;
     margin-top: 20px;
+}
+.comprar2{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
 }
