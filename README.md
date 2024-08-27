@@ -5,25 +5,30 @@
 npm i
 ```
 
-## Configuracion de archivo .env para administrador
+## Configuracion de archivo .env necesaria:
 
 ```
-MONGO_URI = 'mongodb://adminCineCampus:1234@monorail.proxy.rlwy.net:39923/cineCampus'
+MONGO_URI = 'mongodb://mongo:soawdCpMSFXhGOCPwNONQAYkNWsDmliJ@junction.proxy.rlwy.net:47539/'
 DB_NAME = 'cineCampus'
-```
-
-## Configuracion de archivo .env para usuario
-
-```
-MONGO_URI = 'mongodb://juanito:1234@monorail.proxy.rlwy.net:39923/cineCampus'
-DB_NAME = 'cineCampus'
-```
-
-## Configuracion de archivo .env para usuario vip
-
-```
-MONGO_URI = 'mongodb://juanito:1234@monorail.proxy.rlwy.net:39923/cineCampus'
-DB_NAME = 'cineCampus'
+EXPRESS_STATIC = 'public'
+EXPRESS_HOST = 'localhost'
+EXPRESS_PORT = '5001'
+EXPRESS_IMG = 'server/uploads'
+CLOUDINARY_URL='cloudinary://849478478396893:ptne8_mL-_DznBfWuzzrs5F_sxQ@daekrtomd'
+FIREBASE_SERVICE_ACCOUNT_KEY='{
+  "type": "service_account",
+  "project_id": "cinecampus-f0e3a",
+  "private_key_id": "acb1a4447b8870827b46aafaeeb25a99212f0615",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDFGM+kl53liWYj\nyQtyMo9E0a0orQDRpnQMZ05hnT/0jJ5p+Xmoz+u4fo+LP2v6MuYQF/fT/6Y1THX2\nRaXMTdbZMS46w5dhpuG8x02xEnKxiZtOAbiS+Lrohl3MoZB6Oc6SBXa8K/Rcxjij\nzmF1q27aDjbxo8qJDbaJFNunjhtGfa0OG7j5YdjlhbNGAGpK0C6afKXo3BGeY0i1\nP7YhVMpdN26tNaCsmi5X5xy0TTdS/ToqZcfUR/9FBcjn3KWlrGF2HMlx+n2wsezY\ncf7uVUzV+bJukWHA9+No4soyc7spi1gY/wL4vlBuLlFnbd3pUJXUbuqIzKoMLHzi\nx6J58GnXAgMBAAECggEAQ7S3N7JBsmUVqjtY7DzEDH7+vddYTayhdtVSDqRHIQnh\nLURe74elUPZg9xOtUwCDGYoyPyg1/18pspTQVLN0l52WZOdlrEz4hLHuVWKh9azw\npcZfklVRV6k4tZ/WkrYi6PRpilCLHAeX02WFAzgF13BEnZOHcrc8OjDpF9DwO7E7\nrc8Np4chab/2PZHkbaEzOwkXtqN4p0WNmFkXa1osde2mlvB7dxcw1kPVhsrw3p6j\nW2ednbSm/lI0NOnRurL1hf7SOqO3sMCC8T5v0dJw8t9v6zWaeBnjq5U2tyDbnLdJ\nbRm8qQm/F+y25fprkZLG7GtzZbP/FKnUNL+fWCjgMQKBgQDx7bwEIkcM6R4FSBJ6\nyDmBbwFaNTpZqHHBSP5RYbWbv0XWUdoqwpAocUJpi3EmDLZILJ0pnGcO825I1Ehq\ntHHN+lOmDlGefCfTiphfcfRU3RRcl4ex6h5gKWWhKhRemyjbDk2WwWfug0GnQbI8\nodpFfodRU6y+rpu5cF2N0vePaQKBgQDQj4q1ARQIGHQY3SUNRiS6JzDlkYzTjNky\nNUpkDMHgti+Vx78udmAJIvXBlSGG0t1unonqvitphlRHck/wV15Y7wdqcVb+1afi\nLeSG+luAbz40I8az5vJ8iJtqactkFroFuwwZdYWd8zRz/WVIPh9aP7/S9ctAeLK9\n+3B7So5HPwKBgHJOhlhZrcJe3s1WCU00D1+liDkMDz7PhLfzeh4PkZQ+Iowp7m/n\nr9877EocFWEJ/pJJahSADn2U7RXCH1kzWtYcoatC9rNwLA0aXfYyzGPQdU9uVTHt\n0V5UEO2+CRPOMdaWgnhpd2bNY5bYRpO5UX0mVF9LrsIFlBRhEALzm/6JAoGAfB+x\n0Z/eqCLFlbanwoqoeRGyDC7fvVfqO/NzXrApAu/qyh2jLqfM6CMiWB/FYFRG7Pr1\n4ftkIt2LcyoZYVTeFdfMdhEWUXwe+oGNrLd7laifQLC6JX+heXRj6qUkI2FTPO3h\neZVz/FkuMonwqVovlqqyI3+dg7VRy7fFbdslakkCgYBQLmaN+PE/1cKvDzhqbs1K\nC6SIiJil9qkU8qIBwwDwrJ8zS1qAFmR21PjC/e45wgCEvw88HdcQ+3Qe27O0V4mj\nPnJC7H58K1Ytkq77bf80B7pJN/shu/0ipCbUUJrMjfg6KL5W/bwxCHjg8gbj9H82\nsyb2qIpIpL4JvDG+cDE5+w==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-ad7kl@cinecampus-f0e3a.iam.gserviceaccount.com",
+  "client_id": "104012983393060935605",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-ad7kl%40cinecampus-f0e3a.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
+'
 ```
 
 
