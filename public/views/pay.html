@@ -8,6 +8,7 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="../css/pay.css">
     <script type="module" src="../js/pay.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
 </head>
 
 <body>
@@ -19,8 +20,7 @@
         </header>
         <div class="first-card">
             <div class="movie-img">
-                <img src="https://m.media-amazon.com/images/M/MV5BNDYxNjQyMjAtNTdiOS00NGYwLWFmNTAtNThmYjU5ZGI2YTI1XkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg"
-                    alt="">
+                <img src="https://m.media-amazon.com/images/M/MV5BNDYxNjQyMjAtNTdiOS00NGYwLWFmNTAtNThmYjU5ZGI2YTI1XkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg" alt="">
             </div>
             <div class="text">
                 <h2 class="title">movie title</h2>
@@ -53,25 +53,17 @@
             <h1 class="titleP">
                 <h1 class="payment">Payment method</h1>
             </h1>
-            <div class="creditCard">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqEzY6ntfa6m2Y2M7Z77pKqbC-joBiRzBn6A&s"
-                    alt="">
-                <div class="infoCard">
-                    <p class="nameCard">MasterCard</p>
-                    <p class="numberCard">**** **** 1234 1234</p>
+            <form id="payment-form">
+                <div id="card-element"><!-- Stripe Element will be inserted here --></div>
+                <div class="contador">
+                    <p class="sms">Complete your payment in</p>
+                    <p class="timer" id="timer">05:00</p>
                 </div>
-                <div class="select">
-                    <button></button>
-                </div>
-            </div>
-            <div class="contador">
-                <p class="sms">Complete your payment in</p>
-                <p class="timer" id="timer">05:00</p>
-            </div>
-            <button class="comprar">Buy ticket</button>
+                <button type="submit" class="comprar" id="submit">Buy ticket</button>
+                <div id="payment-result"></div>
+            </form>
         </section>
     </main>
-
 </body>
 
 </html>

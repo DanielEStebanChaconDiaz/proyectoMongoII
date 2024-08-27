@@ -10,15 +10,44 @@ const appUsers = require('./server/routes/users.routes'); // Importa las rutas d
 const appShowtime = require('./server/routes/showtime.routes');
 const appTickets = require('./server/routes/tickets.routes')
 const appTicket = require('./server/routes/bougth.routes')
+const stripe = require('stripe')('sk_test_51Ps3CL06WcWl6cu4TCkI5J9KSwWlSaPMtf9h8H5jlrUMlpfr9ryTQN2lmuPd1jXaTDfJhShp0jw2MlXOHPMH3qkN003eoytsDv'); // Tu clave secreta de Stripe
 const { error } = require('console');
 
+
+
 const app = express();
+app.use(express.urlencoded({ extended: true }));
 
 // Configura el directorio estático
 app.use(express.static(process.env.EXPRESS_STATIC));
 
 // Middleware para analizar el cuerpo de las solicitudes
 app.use(bodyParser.json());
+app.post('/create-payment-intent', async (req, res) => {
+    console.log(req.body)
+    const { amount, currency } = req.body;
+    console.log(amount, currency);
+
+    if (!amount || !currency) {
+        return res.status(400).send({ error: 'Faltan parámetros en la solicitud.' });
+    }
+
+    try {
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount,
+            currency,
+        });
+
+        res.status(200).send({
+            clientSecret: paymentIntent.client_secret,
+        });
+    } catch (err) {
+        res.status(500).send({ error: err.message });
+    }
+});
+
+
+
 
 // Ruta para servir la vista HTML de asientos
 app.get('/seats', (req, res) => {
