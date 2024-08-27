@@ -76,6 +76,8 @@ body{
   /* flex-wrap: wrap; */
   justify-content: center;
   align-items: center;
+  margin-left: 2rem;
+  /* margin-right: 2rem; */
 }
 
 /* Espaciado entre filas */
@@ -85,8 +87,8 @@ body{
 
 .seat-available{
   background: #323232;
-  height: 1.8rem;
-  width: 1.8rem;
+  height: 1.5rem;
+  width: 1.5rem;
   margin: 3px;
   border-radius: 5px;
   display: flex;
@@ -103,8 +105,8 @@ body{
 }
 .seat-reserved{
   background-color: #CECECE;
-  height: 1.8rem;
-  width: 1.8rem;
+  height: 1.5rem;
+  width: 1.5rem;
   margin: 3px;
   border-radius: 5px;
 }
@@ -120,8 +122,8 @@ body{
 
 .seat-selected{
   background-color: red;
-  height: 1.8rem;
-  width: 1.8rem;
+  height: 1.5rem;
+  width: 1.5rem;
   margin: 3px;
   border-radius: 5px;
   display: flex;

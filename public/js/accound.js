@@ -15,15 +15,30 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 document.getElementById('cerrar').addEventListener('click', (e) => {
+    // Limpiar almacenamiento local
+    localStorage.clear();
+    
+    // Limpiar almacenamiento de sesión
+    sessionStorage.clear();
+    
+    // Opcional: Borrar cookies específicas si tienes alguna
+    document.cookie.split(";").forEach(function(c) {
+        document.cookie = c.trim().split("=")[0] + "=;expires=" + new Date().toUTCString() + ";path=/";
+    });
+    
+    // Cerrar sesión con Firebase (u otro proveedor de autenticación)
     signOut(auth)
         .then(() => {
             alert('Sesión cerrada');
-            window.location.href = '/login'; // Redirige al usuario a /login después de cerrar la sesión
+            
+            // Recargar la página o redirigir
+            window.location.href = '/login';  // Redirige al usuario a /login después de cerrar la sesión
         })
         .catch((error) => {
             console.error('Error al cerrar la sesión:', error);
         });
 });
+
 
 document.addEventListener('DOMContentLoaded', () => {
     // Obtener los elementos de la navegación

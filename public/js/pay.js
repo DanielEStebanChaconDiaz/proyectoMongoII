@@ -1,19 +1,58 @@
 const stripe = Stripe('pk_test_51Ps3CL06WcWl6cu4rSIEa3xDsewWmFuIG6nMsX0KI4aP7TvWDgCjNHDhHdgzMVpQ8njckUuzqJpTxKCfM4EPshgI002uxUT3Jc'); // Clave pública de Stripe
 const elements = stripe.elements();
 
-const cardElement = elements.create('card');
+document.addEventListener('DOMContentLoaded', function () {
+    const card = document.querySelector('#card-element')
+    const add = document.querySelector('.add')
+    const card2 = document.querySelector('.card')
+    card2.style.display = 'none'
+    add.style.display = 'none'
+
+    card.style.display = 'none'
+})
+
+var style = {
+    base: {
+        color: '#fff',
+        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+        fontSmoothing: 'antialiased',
+        fontSize: '1rem',
+        '::placeholder': {
+            color: '#fff'
+        },
+        // Añadimos propiedades para el layout
+        ':-webkit-autofill': {
+            color: '#fff',
+            fill: '#fff'  // Esto cambiará el color del input a blanco cuando el campo se autoguarda
+        },
+        '::-ms-clear': {
+            display: 'none'
+        },
+        // Intentamos aplicar flexbox (nota: esto puede no funcionar directamente en el elemento de Stripe)
+        display: 'flex',
+        flexDirection: 'column'
+    },
+    invalid: {
+        color: '#fff',
+        iconColor: '#fff',  // Esto cambiará el color del icono a blanco cuando el campo sea inválido
+        fill: '#fff'
+    }
+};
+
+
+
+
+const cardElement = elements.create('card', { style: style });
 cardElement.mount('#card-element');
 
 const form = document.getElementById('payment-form');
 form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    // Crear el Payment Intent
-    // Ejemplo de solicitud POST desde el frontend
-
     const urlParams = new URLSearchParams(window.location.search);
-
     const totalPrice = urlParams.get('totalPrice');
+    
+    // Crear el Payment Intent
     const fetchResponse = await fetch('/create-payment-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -25,11 +64,18 @@ form.addEventListener('submit', async (event) => {
 
     const response = await fetchResponse.json();
 
-    const { error, paymentIntent } = await stripe.confirmCardPayment(response.clientSecret, {
-        payment_method: {
-            card: cardElement,
-        }
-    });
+    // Verificar si hay una tarjeta guardada
+    const savedPaymentMethodId = localStorage.getItem('savedPaymentMethodId');
+    let paymentMethod;
+
+    if (savedPaymentMethodId) {
+        paymentMethod = { payment_method: savedPaymentMethodId };
+    } else {
+        paymentMethod = { payment_method: { card: cardElement } };
+    }
+
+    // Confirmar el pago
+    const { error, paymentIntent } = await stripe.confirmCardPayment(response.clientSecret, paymentMethod);
 
     if (error) {
         document.getElementById('payment-result').textContent = `Error: ${error.message}`;
@@ -37,6 +83,86 @@ form.addEventListener('submit', async (event) => {
         document.getElementById('payment-result').textContent = 'Payment successful!';
     }
 });
+const cerrar = document.querySelector('.cerrar')
+cerrar.addEventListener('click', () => {
+    const cerrar = document.querySelector('.cerrar')
+    const card = document.querySelector('#card-element')
+    cerrar.style.display = 'none'
+    const add = document.querySelector('.add')
+    add.style.display = 'none'
+    card.style.display = 'none'
+})
+
+const addCard = document.querySelector('.addCard');
+addCard.addEventListener('click', () => {
+    // Añadir el elemento de tarjeta al formulario
+    const cerrar = document.querySelector('.cerrar')
+    const card = document.querySelector('#card-element')
+    const privateElement = document.querySelector('.__PrivateStripeElement')
+    const add = document.querySelector('.add')
+    privateElement.style.height = '20px'
+    add.style.display = 'flex'
+    cerrar.style.display = 'block'
+    card.style.display = 'flex'
+})
+
+
+const addButton = document.querySelector('.add');
+addButton.addEventListener('click', saveCardDetails);
+async function saveCardDetails(event) {
+    event.preventDefault();
+
+    try {
+        // Crear el PaymentMethod
+        const result = await stripe.createPaymentMethod({
+            type: 'card',
+            card: cardElement,
+        });
+
+        if (result.error) {
+            // Mostrar error al usuario
+            document.getElementById('payment-result').textContent = `Error: ${result.error.message}`;
+        } else {
+            // PaymentMethod creado exitosamente
+            const paymentMethod = result.paymentMethod;
+            const last4 = paymentMethod.card.last4;
+
+            // Actualizar el HTML con los últimos 4 dígitos
+            updateCardDisplay(last4);
+
+            document.getElementById('payment-result').textContent = 'Card saved successfully!';
+
+            // Guardar el paymentMethodId si lo necesitas después
+            localStorage.setItem('savedPaymentMethodId', paymentMethod.id);
+
+            // Opcional: enviar a tu servidor
+            // await sendPaymentMethodToServer(paymentMethod.id);
+
+            // Ocultar elementos relacionados con el formulario de tarjeta
+            const card = document.querySelector('#card-element');
+            const add = document.querySelector('.add');
+            const card2 = document.querySelector('.card');
+            const cerrar = document.querySelector('.cerrar');
+            const addCard = document.querySelector('.addCard');
+
+            addCard.style.display = 'none';
+            cerrar.style.display = 'none';
+            add.style.display = 'none';
+            card.style.display = 'none';
+            card2.style.display = 'flex';
+        }
+    } catch (error) {
+        document.getElementById('payment-result').textContent = 'Error: Could not save card.';
+    }
+}
+
+
+function updateCardDisplay(last4) {
+    const infoElement = document.querySelector('.card .info');
+    if (infoElement) {
+        infoElement.textContent = `**** **** **** ${last4}`;
+    }
+}
 
 document.addEventListener('DOMContentLoaded', function () {
     function generateRandomOrderNumber() {
@@ -315,28 +441,28 @@ comprar.addEventListener('click', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const totalPrice = urlParams.get('totalPrice');
     const fetchResponse = await fetch('/create-payment-intent', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        amount: Math.round(parseFloat(totalPrice) * 100),  // Convertir a centavos y redondear
-        currency: 'cop'  // Moneda colombiana (COP)
-      })
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            amount: Math.round(parseFloat(totalPrice) * 100),  // Convertir a centavos y redondear
+            currency: 'cop'  // Moneda colombiana (COP)
+        })
     });
-  
+
     const response = await fetchResponse.json();
-  
+
     const { error, paymentIntent } = await stripe.confirmCardPayment(response.clientSecret, {
-      payment_method: {
-        card: cardElement,
-      }
+        payment_method: {
+            card: cardElement,
+        }
     });
-  
+
     if (error) {
-      document.getElementById('payment-result').textContent = `Error: ${error.message}`;
+        document.getElementById('payment-result').textContent = `Error: ${error.message}`;
     } else if (paymentIntent.status === 'succeeded') {
-      document.getElementById('payment-result').textContent = 'Payment successful!';
-      // Llamar a la función obtenerDetallesCompra solo si el pago es exitoso
-      obtenerDetallesCompra();
+        document.getElementById('payment-result').textContent = 'Payment successful!';
+        // Llamar a la función obtenerDetallesCompra solo si el pago es exitoso
+        obtenerDetallesCompra();
     }
     function obtenerDetallesCompra() {
 

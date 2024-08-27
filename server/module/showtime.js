@@ -79,7 +79,7 @@ module.exports = class Showtime {
 
 
 
-      console.log('Resultado de la actualización:', result);
+      console.log('Resultado de la actualización:', result, 'ola');
 
       // Verificar si se actualizó algún documento
       console.log(result);

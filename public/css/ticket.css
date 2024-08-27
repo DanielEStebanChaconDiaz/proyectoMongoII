@@ -67,7 +67,7 @@ body {
 }
 .info {
     font-size: .9rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     display: flex;
     justify-content: space-between;
 }
