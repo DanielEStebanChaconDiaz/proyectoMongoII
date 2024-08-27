@@ -63,6 +63,18 @@ No image
 `;
     }
 }
+const cachedUserData = localStorage.getItem(CACHE_KEY);
+const userData = JSON.parse(cachedUserData);
+
+console.log(userData.name); // "NoseNose"
+console.log(userData.img);  // "https://res.cloudinary.com/daekrtomd/image/upload/v1724411159/xgaq7mfyduovrd31munc.webp"
+
+
+const tickets = document.querySelector('.bottom-nav .nav-item:nth-child(3)')
+    function redirectTickets(){
+        window.location.href = `/tickets?userName=${userData.name}`;
+    }
+    tickets.addEventListener('click', redirectTickets); 
 
 // Ejecutar la función fetchUserName cuando el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', function () {

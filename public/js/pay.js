@@ -144,6 +144,8 @@ async function saveCardDetails(event) {
             const card2 = document.querySelector('.card');
             const cerrar = document.querySelector('.cerrar');
             const addCard = document.querySelector('.addCard');
+            const check = document.querySelector('.check');
+            check.style.background = 'red'
 
             addCard.style.display = 'none';
             cerrar.style.display = 'none';

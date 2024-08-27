@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const browseButton = document.querySelector('.bottom-nav .nav-item:nth-child(2)');
     const accountButton = document.querySelector('.bottom-nav .nav-item:nth-child(4)');
     const searchInput = document.getElementById('searchInput');
-
+    
     // Función para redirigir al /movies
     function redirectToMovies() {
         window.location.href = '/movies';
@@ -47,6 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function focusSearchInput() {
         searchInput.focus();
     }
+
+    
 
     function redirectAccound(){
         window.location.href = '/accound';

@@ -10,6 +10,7 @@ const appUsers = require('./server/routes/users.routes'); // Importa las rutas d
 const appShowtime = require('./server/routes/showtime.routes');
 const appTickets = require('./server/routes/tickets.routes')
 const appTicket = require('./server/routes/bougth.routes')
+const appTicketes = require('./server/routes/allTickets.routes');
 const stripe = require('stripe')('sk_test_51Ps3CL06WcWl6cu4TCkI5J9KSwWlSaPMtf9h8H5jlrUMlpfr9ryTQN2lmuPd1jXaTDfJhShp0jw2MlXOHPMH3qkN003eoytsDv'); // Tu clave secreta de Stripe
 const { error } = require('console');
 
@@ -47,7 +48,11 @@ app.post('/create-payment-intent', async (req, res) => {
 });
 
 
+app.get('/tickets', (req, res) => {
+    res.sendFile(path.join(__dirname, process.env.EXPRESS_STATIC, 'views', 'tickets.html'));
+})
 
+app.use('/tickets', appTicketes)
 
 // Ruta para servir la vista HTML de asientos
 app.get('/seats', (req, res) => {

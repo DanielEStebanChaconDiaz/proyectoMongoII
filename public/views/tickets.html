@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../css/tickets.css">
+    <script type="module" src="../js/ticket.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
+
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+
+
+</head>
+
+<body>
+    <header class="header">
+        <i class='bx bx-chevron-left' id="atras"></i>
+        <h1>Ticket</h1>
+        <i class='bx bx-dots-vertical-rounded'></i>
+    </header>
+
+    <main>
+        <div class="card1">
+            <div class="image">
+                <img src="https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg"
+                    alt="">
+                <div class="text">
+                    <h2 class="title">Inception</h2>
+                    <p class="textTicket">Show this ticket at the entrance</p>
+                </div>
+            </div>
+            <div class="details">
+                <div class="info">
+                    <div class="infotext">
+                        <p class="cinema">Cinema</p>
+                        <h2 class="cinemaTtile">cineCampus</h2>
+                    </div>
+                    <div class="img">
+                        <img src="https://i.ibb.co/K96x0kR/cinema.png" alt="">
+                    </div>
+                </div>
+                <div class="info" style="margin-top: 2rem;">
+                    <div class="infotext">
+                        <p class="date">Date</p>
+                        <h2 class="dateTitle">2022-02-22</h2>
+                    </div>
+                    <div class="time">
+                        <p class="timeT">Time</p>
+                        <h2 class="timeTitle">13:00</h2>
+                    </div>
+                </div>
+                <div class="info">
+                    <div class="infotext">
+                        <p class="cinemaHall">Cinema Hall #</p>
+                        <h2 class="cinemaHallTitle">Cinema A</h2>
+                    </div>
+                    <div class="seats">
+                        <p class="seat">Seat</p>
+                        <h2 class="seatPurchase">C2</h2>
+                    </div>
+                </div>
+                <div class="info">
+                    <div class="infotext">
+                        <p class="price">Cost</p>
+                        <h2 class="priceTitle">$100</h2>
+                    </div>
+                    <div class="payment">
+                        <p class="paymentT">OrderId</p>
+                        <h2 class="order">123456789</h2>        
+                </div>
+            </div>
+            <div class="barcode">
+                <img src="" id="barcode" alt="">
+            </div>
+        </div>
+    </main>
+    <div class="bottom-nav">
+        <div class="nav-item">
+            <div><i class='bx bxs-home'></i>
+                <p>Home</p>
+            </div>
+        </div>
+        <div class="nav-item">
+            <div><i class='bx bx-search' ></i>
+                <p>Browse</p>
+            </div>
+        </div>
+        <div class="nav-item">
+            <div><i class='bx bxs-coupon'></i>
+                <p>Tickets</p>
+            </div>
+        </div>
+        <div class="nav-item">
+            <div><i class='bx bx-user'></i>
+                <p>Profile</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -64,4 +64,20 @@ module.exports = class Tickets {
         }
 
     }
+
+    async getTicketsForUserName(userName) {
+        try {
+            // Conectar a la base de datos
+            const db = await this.connect();
+            const ticketsCollection = db.collection('tickets');
+            const result = await ticketsCollection.find({
+                userName: userName
+            }).toArray();
+            return result;
+            
+        } catch (err) {
+            console.error('Error getting tickets for user:', err);
+            throw err;
+        }
+    }
 }

@@ -169,7 +169,7 @@ body {
 
 .cerrar{
     position: absolute;
-    top: 40.5rem;
+    top: 37rem;
     right: 2rem;
     font-size: 2rem;
     color: #fff;
@@ -241,7 +241,7 @@ body {
 .elejir{
     width: 2rem;
     height: 2rem;
-    border:1px red solid;
+    border:2px red solid;
     border-radius: 100%;
     padding: 1.5%;
     margin-left: 3rem;

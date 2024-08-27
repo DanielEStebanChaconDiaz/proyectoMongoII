@@ -26,5 +26,4 @@ appTicket.get(
           res.status(500).json({ message: "Error al obtener los asientos" });
       }
   });
-
 module.exports = appTicket;
